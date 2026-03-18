@@ -322,30 +322,22 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 <div class="modal-overlay" id="version-modal">
   <div class="modal" style="width:380px">
     <div class="modal-head">
-      <h3>Add Plan Version</h3>
+      <h3>Add New Revision</h3>
       <button class="modal-close" onclick="closeVersionModal()">×</button>
     </div>
-    <p style="font-size:12px;color:#888;margin-bottom:16px;line-height:1.5">Add a new version when Brio sends updated plans. Previous notes are preserved under their original version.</p>
+    <p style="font-size:12px;color:#888;margin-bottom:16px;line-height:1.5">Use this when Brio sends an updated plan. Notes from previous versions are preserved and still viewable.</p>
     <div class="form-group">
-      <label>Version Name</label>
-      <input type="text" id="version-name" placeholder="e.g. Draft 3.17.26 — Main Floor">
+      <label>Version Label</label>
+      <input type="text" id="version-name" placeholder="e.g. Version 2 — April 5, 2026">
     </div>
     <div class="form-group">
-      <label>Plan Image</label>
-      <select id="version-image">
-        <option value="">— Select image file —</option>
-        <option value="d94c9eaa-1.png">Page 1</option>
-        <option value="d94c9eaa-2.png">Page 2</option>
-        <option value="d94c9eaa-3.png">Page 3</option>
-        <option value="d94c9eaa-4.png">Page 4</option>
-        <option value="d94c9eaa-5.png">Page 5</option>
-        <option value="d94c9eaa-6.png">Page 6 (Main Floor)</option>
-        <option value="d94c9eaa-7.png">Page 7</option>
-      </select>
+      <label>Plan Image File</label>
+      <input type="text" id="version-image" placeholder="filename.png (must be uploaded to GitHub repo)">
+      <div style="font-size:10px;color:#aaa;margin-top:4px">Upload the new PNG to the GitHub repo first, then enter the filename here.</div>
     </div>
     <div class="form-group">
-      <label>Description <span style="font-weight:400;text-transform:none">(optional)</span></label>
-      <input type="text" id="version-desc" placeholder="e.g. First draft, sent by Brio 3/17">
+      <label>Notes <span style="font-weight:400;text-transform:none">(optional)</span></label>
+      <input type="text" id="version-desc" placeholder="e.g. Revised kitchen layout, updated garage angle">
     </div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeVersionModal()">Cancel</button>
@@ -435,6 +427,19 @@ function updateUserBadge() {
 function loadVersions() {
   db.collection('versions').orderBy('addedAt', 'asc').onSnapshot(snap => {
     versions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Auto-seed Version 1 if Firestore is empty
+    if (versions.length === 0) {
+      db.collection('versions').add({
+        name: 'Version 1 — March 17, 2026',
+        imageFile: 'd94c9eaa-6.png',
+        description: 'First draft from Brio',
+        addedBy: 'System',
+        addedAt: firebase.firestore.Timestamp.fromDate(new Date('2026-03-17'))
+      });
+      return; // onSnapshot will fire again with the new version
+    }
+
     renderVersionSelect();
     setSyncStatus('synced');
   }, err => { console.error(err); setSyncStatus('error'); });
@@ -467,11 +472,13 @@ function selectVersion(id) {
 }
 
 function openAddVersionModal() {
-  document.getElementById('version-name').value = '';
+  const nextNum = versions.length + 1;
+  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('version-name').value = `Version ${nextNum} — ${today}`;
   document.getElementById('version-image').value = '';
   document.getElementById('version-desc').value = '';
   document.getElementById('version-modal').classList.add('open');
-  setTimeout(() => document.getElementById('version-name').focus(), 50);
+  setTimeout(() => document.getElementById('version-image').focus(), 50);
 }
 
 function closeVersionModal() {
@@ -483,7 +490,7 @@ async function saveVersion() {
   const imageFile = document.getElementById('version-image').value;
   const desc      = document.getElementById('version-desc').value.trim();
   if (!name)      { document.getElementById('version-name').focus(); return; }
-  if (!imageFile) { document.getElementById('version-image').focus(); return; }
+  if (!imageFile) { alert('Enter the image filename (e.g. plan-v2.png)'); document.getElementById('version-image').focus(); return; }
 
   setSyncStatus('syncing');
   try {
