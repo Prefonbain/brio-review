@@ -89,8 +89,12 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 
 .card-actions { display: flex; gap: 1px; flex-shrink: 0; }
 .card-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 13px; padding: 2px 4px; transition: color 0.15s; line-height: 1; }
-.card-btn.edit:hover { color: #1a6eb5; }
-.card-btn.del:hover  { color: #CD1543; }
+.card-btn.edit:hover  { color: #1a6eb5; }
+.card-btn.del:hover   { color: #CD1543; }
+.card-btn.heart       { display: flex; align-items: center; gap: 3px; font-size: 14px; }
+.card-btn.heart.loved { color: #CD1543; }
+.card-btn.heart:hover { color: #CD1543; }
+.heart-count          { font-size: 10px; font-weight: 600; }
 
 .note-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
 .category-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
@@ -670,6 +674,17 @@ function editNote(id) {
   openNoteModal(true);
 }
 
+async function toggleHeart(id) {
+  if (!currentUser) { openUserModal(); return; }
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  const hearts = note.hearts || [];
+  const op = hearts.includes(currentUser)
+    ? firebase.firestore.FieldValue.arrayRemove(currentUser)
+    : firebase.firestore.FieldValue.arrayUnion(currentUser);
+  await db.collection('notes').doc(id).update({ hearts: op });
+}
+
 async function deleteNote(id) {
   if (!confirm('Delete this note?')) return;
   setSyncStatus('syncing');
@@ -730,6 +745,7 @@ function renderSidebar(incomingIds = new Set()) {
     const createdTs  = note.createdAt ? fmtTime(note.createdAt.toDate ? note.createdAt.toDate() : new Date(note.createdAt)) : '';
     const editedLine = note.editedBy ? `<span class="edited"> · edited by ${esc(note.editedBy)}</span>` : '';
     const isNew      = incomingIds.has(note.id);
+    const hearts     = note.hearts || [];
     return `
     <div class="note-card${note.id === highlightedId ? ' highlighted' : ''}${isNew ? ' incoming' : ''}"
          id="card-${note.id}" onclick="highlightNote('${note.id}')">
@@ -743,6 +759,9 @@ function renderSidebar(incomingIds = new Set()) {
           </div>
         </div>
         <div class="card-actions">
+          <button class="card-btn heart ${hearts.includes(currentUser) ? 'loved' : ''}" onclick="event.stopPropagation();toggleHeart('${note.id}')" title="${hearts.includes(currentUser) ? 'Remove heart' : 'Love this'}">
+            ♥${hearts.length > 0 ? `<span class="heart-count">${hearts.length}</span>` : ''}
+          </button>
           <button class="card-btn edit" onclick="event.stopPropagation();editNote('${note.id}')" title="Edit">✏</button>
           <button class="card-btn del"  onclick="event.stopPropagation();deleteNote('${note.id}')" title="Delete">×</button>
         </div>
