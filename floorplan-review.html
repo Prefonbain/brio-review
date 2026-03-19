@@ -60,9 +60,19 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .stat { display: flex; align-items: center; gap: 4px; }
 .stat strong { color: #2c2c2c; }
 
-.filter-bar { padding: 7px 10px; display: flex; gap: 4px; border-bottom: 1px solid #e8e2dc; flex-wrap: wrap; }
+.filter-section { border-bottom: 1px solid #e8e2dc; }
+.filter-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #bbb; padding: 6px 12px 2px; }
+.filter-bar { padding: 4px 10px 7px; display: flex; gap: 4px; flex-wrap: wrap; }
 .filter-chip { padding: 3px 9px; border-radius: 12px; font-size: 10px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; opacity: 0.5; transition: all 0.15s; }
 .filter-chip.active { opacity: 1; border-color: currentColor; }
+.filter-chip.high     { color: #CD1543; background: #fdeef2; }
+.filter-chip.medium   { color: #b57800; background: #fdf5e0; }
+.filter-chip.low      { color: #777;    background: #f0f0f0; }
+.room-filter-bar { padding: 4px 10px 8px; }
+.room-filter-bar select { width: 100%; padding: 5px 8px; border: 1.5px solid #e0d8d0; border-radius: 5px; font-size: 11px; font-family: inherit; background: #faf8f6; color: #2c2c2c; cursor: pointer; }
+.room-filter-bar select:focus { outline: none; border-color: #CD1543; }
+.clear-filters { font-size: 10px; color: #CD1543; cursor: pointer; padding: 0 12px 6px; display: none; }
+.clear-filters.visible { display: block; }
 .filter-chip.all     { color: #3D2C2B; background: #f4f1ee; }
 .filter-chip.question{ color: #1a6eb5; background: #e8f2fc; }
 .filter-chip.change  { color: #b55a00; background: #fdf0e0; }
@@ -209,12 +219,47 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
       <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#aaa;display:inline-block"></span>&nbsp;<strong id="stat-low">0</strong> Low</div>
     </div>
 
-    <div class="filter-bar">
-      <div class="filter-chip all active" onclick="setFilter('all',this)">All</div>
-      <div class="filter-chip question" onclick="setFilter('question',this)">Questions</div>
-      <div class="filter-chip change" onclick="setFilter('change',this)">Changes</div>
-      <div class="filter-chip confirmed" onclick="setFilter('confirmed',this)">Confirmed</div>
-      <div class="filter-chip hold" onclick="setFilter('hold',this)">On Hold</div>
+    <div class="filter-section">
+      <div class="filter-label">Category</div>
+      <div class="filter-bar">
+        <div class="filter-chip all active" onclick="setCatFilter('all',this)">All</div>
+        <div class="filter-chip question" onclick="setCatFilter('question',this)">Questions</div>
+        <div class="filter-chip change" onclick="setCatFilter('change',this)">Changes</div>
+        <div class="filter-chip confirmed" onclick="setCatFilter('confirmed',this)">Confirmed</div>
+        <div class="filter-chip hold" onclick="setCatFilter('hold',this)">On Hold</div>
+      </div>
+      <div class="filter-label">Priority</div>
+      <div class="filter-bar">
+        <div class="filter-chip all active" id="pri-all" onclick="setPriFilter('all',this)">All</div>
+        <div class="filter-chip high"   onclick="setPriFilter('high',this)">High</div>
+        <div class="filter-chip medium" onclick="setPriFilter('medium',this)">Medium</div>
+        <div class="filter-chip low"    onclick="setPriFilter('low',this)">Low</div>
+      </div>
+      <div class="filter-label">Room</div>
+      <div class="room-filter-bar">
+        <select id="room-filter" onchange="setRoomFilter(this.value)">
+          <option value="">All Rooms</option>
+          <option value="Great Room">Great Room</option>
+          <option value="Dining">Dining</option>
+          <option value="Kitchen">Kitchen</option>
+          <option value="Pantry">Pantry</option>
+          <option value="Primary Bedroom">Primary Bedroom</option>
+          <option value="Primary Bath">Primary Bath</option>
+          <option value="Primary Closet (W.I.C.)">Primary Closet (W.I.C.)</option>
+          <option value="Bedroom #2">Bedroom #2</option>
+          <option value="Bedroom #3">Bedroom #3</option>
+          <option value="Full Bath">Full Bath</option>
+          <option value="Mudroom">Mudroom</option>
+          <option value="Laundry">Laundry</option>
+          <option value="Covered Patio">Covered Patio</option>
+          <option value="Deck">Deck</option>
+          <option value="Garage">Garage</option>
+          <option value="Entry / Foyer">Entry / Foyer</option>
+          <option value="Hallway">Hallway</option>
+          <option value="General / Whole Floor">General / Whole Floor</option>
+        </select>
+      </div>
+      <div class="clear-filters" id="clear-filters" onclick="clearAllFilters()">✕ Clear all filters</div>
     </div>
 
     <div class="notes-list" id="notes-list">
@@ -395,7 +440,9 @@ let notesListener = null;
 let heartsListener = null;
 let pendingPin    = null;
 let editingId     = null;
-let activeFilter  = 'all';
+let filterCat  = 'all';
+let filterPri  = 'all';
+let filterRoom = '';
 let canvasMode    = 'note'; // 'note' | 'heart'
 let zoom          = 1.0;
 let highlightedId = null;
@@ -802,8 +849,16 @@ function renderPins() {
 // Sidebar
 // ══════════════════════════════════════════
 function renderSidebar(incomingIds = new Set()) {
-  const list     = document.getElementById('notes-list');
-  const filtered = activeFilter === 'all' ? notes : notes.filter(n => n.category === activeFilter);
+  const list = document.getElementById('notes-list');
+  const filtered = notes.filter(n => {
+    if (filterCat  !== 'all' && n.category !== filterCat)  return false;
+    if (filterPri  !== 'all' && n.priority !== filterPri)  return false;
+    if (filterRoom !== ''    && n.room     !== filterRoom)  return false;
+    return true;
+  });
+  const anyActive = filterCat !== 'all' || filterPri !== 'all' || filterRoom !== '';
+  const cc = document.getElementById('clear-filters');
+  if (cc) cc.classList.toggle('visible', anyActive);
   document.getElementById('note-count').textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
 
   const statsBar = document.getElementById('stats-bar');
@@ -875,10 +930,32 @@ function highlightNote(id) {
   }
 }
 
-function setFilter(f, el) {
-  activeFilter = f;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+function setCatFilter(f, el) {
+  filterCat = f;
+  el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
+  renderSidebar();
+}
+
+function setPriFilter(f, el) {
+  filterPri = f;
+  el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderSidebar();
+}
+
+function setRoomFilter(val) {
+  filterRoom = val;
+  renderSidebar();
+}
+
+function clearAllFilters() {
+  filterCat = 'all'; filterPri = 'all'; filterRoom = '';
+  document.getElementById('room-filter').value = '';
+  document.querySelectorAll('.filter-bar .filter-chip.all').forEach(c => {
+    c.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  });
   renderSidebar();
 }
 
