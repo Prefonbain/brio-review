@@ -166,6 +166,14 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .name-preset:hover { border-color: #CD1543; color: #CD1543; background: #fff5f7; }
 .name-preset.selected { border-color: #CD1543; color: #CD1543; background: #fff5f7; }
 
+/* ── Mobile sidebar toggle FAB ── */
+.notes-fab { display: none; position: fixed; bottom: 20px; left: 20px; z-index: 60; background: #3D2C2B; color: #EAE5E1; border: none; border-radius: 24px; padding: 10px 16px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,0.3); gap: 6px; align-items: center; }
+.notes-fab-count { background: #CD1543; color: white; border-radius: 10px; padding: 1px 6px; font-size: 11px; }
+
+/* ── Sidebar backdrop (mobile) ── */
+.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 89; }
+.sidebar-backdrop.open { display: block; }
+
 /* ── Category / priority colors ── */
 .cat-question  { background: #1a6eb5; }
 .cat-change    { background: #b55a00; }
@@ -175,6 +183,91 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .tag-change    { background: #fdf0e0; color: #b55a00; }
 .tag-confirmed { background: #e6f5ec; color: #1a7a42; }
 .tag-hold      { background: #f5e6f3; color: #7a1a6e; }
+
+/* ════════════════════════════
+   RESPONSIVE — MOBILE
+   ════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Header — 2 rows */
+  header { flex-wrap: wrap; padding: 8px 12px; gap: 6px; }
+  .header-left { flex: 1; min-width: 0; }
+  .header-left h1 { font-size: 13px; }
+  .header-left .subtitle { display: none; }
+  .header-center { order: 3; width: 100%; justify-content: flex-start; gap: 6px; }
+  .header-right { gap: 6px; }
+  #version-select { max-width: none; flex: 1; font-size: 12px; }
+  .user-name-label { display: none; }
+  .btn-ghost { padding: 5px 10px; font-size: 11px; }
+
+  /* Workspace — canvas fills screen */
+  .workspace { position: relative; }
+
+  /* Sidebar — bottom drawer */
+  .sidebar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100%;
+    height: 75vh;
+    z-index: 90;
+    border-right: none;
+    border-top: 2px solid #d8d0c8;
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  }
+  .sidebar.open { transform: translateY(0); }
+
+  /* Sidebar drag handle */
+  .sidebar-header::before {
+    content: '';
+    display: block;
+    width: 40px; height: 4px;
+    background: #d8d0c8;
+    border-radius: 2px;
+    margin: 0 auto 10px;
+    position: absolute;
+    top: 8px; left: 50%; transform: translateX(-50%);
+  }
+  .sidebar-header { position: relative; padding-top: 20px; }
+
+  /* Show FAB */
+  .notes-fab { display: flex; }
+
+  /* Hide zoom controls bottom-right (move up to avoid FAB) */
+  .zoom-controls { bottom: 72px; right: 12px; }
+
+  /* Mode toggle — larger tap targets */
+  .mode-toggle { top: 8px; }
+  .mode-btn { padding: 7px 16px; font-size: 13px; }
+
+  /* Modals — full width, slide from bottom */
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal {
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    max-height: 92vh;
+    padding: 20px 16px 32px;
+    animation: slide-up 0.25s ease;
+  }
+  @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  /* Form fields — larger on mobile */
+  .form-group input, .form-group textarea, .form-group select { font-size: 16px; padding: 10px 12px; }
+  .form-group textarea { height: 90px; }
+  .modal-actions .btn { padding: 10px 16px; font-size: 13px; }
+  .modal-actions .btn-primary { flex: 1; }
+
+  /* Name presets — full width */
+  .name-presets { gap: 6px; }
+  .name-preset { flex: 1; text-align: center; padding: 10px 8px; }
+
+  /* Filters */
+  .filter-bar { gap: 5px; }
+  .filter-chip { padding: 5px 10px; font-size: 11px; }
+  .room-filter-bar select { font-size: 14px; padding: 8px 10px; }
+}
 </style>
 </head>
 <body>
@@ -289,6 +382,14 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
   </div>
 
 </div>
+
+<!-- Mobile sidebar backdrop -->
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeMobileSidebar()"></div>
+
+<!-- Mobile notes FAB -->
+<button class="notes-fab" id="notes-fab" onclick="toggleMobileSidebar()">
+  📋 Notes <span class="notes-fab-count" id="fab-count">0</span>
+</button>
 
 <!-- Zoom controls -->
 <div class="zoom-controls" id="zoom-controls" style="display:none">
@@ -860,6 +961,7 @@ function renderSidebar(incomingIds = new Set()) {
   const cc = document.getElementById('clear-filters');
   if (cc) cc.classList.toggle('visible', anyActive);
   document.getElementById('note-count').textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
+  updateFabCount();
 
   const statsBar = document.getElementById('stats-bar');
   if (notes.length > 0) {
@@ -920,6 +1022,7 @@ function highlightNote(id) {
   highlightedId = id;
   renderPins();
   renderSidebar();
+  closeMobileSidebar();
   const card = document.getElementById(`card-${id}`);
   if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   const note = notes.find(n => n.id === id);
@@ -1077,6 +1180,60 @@ function esc(s) {
   if (!s) return '';
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// ══════════════════════════════════════════
+// Mobile sidebar
+// ══════════════════════════════════════════
+function toggleMobileSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  backdrop.classList.toggle('open', !isOpen);
+}
+
+function closeMobileSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+}
+
+function updateFabCount() {
+  const el = document.getElementById('fab-count');
+  if (el) el.textContent = notes.length;
+}
+
+// ══════════════════════════════════════════
+// Pinch to zoom
+// ══════════════════════════════════════════
+(function() {
+  let lastDist = null;
+  let lastZoom = 1;
+
+  function dist(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  document.getElementById('image-container').addEventListener('touchstart', e => {
+    if (e.touches.length === 2) { lastDist = dist(e.touches); lastZoom = zoom; }
+  }, { passive: true });
+
+  document.getElementById('image-container').addEventListener('touchmove', e => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const d = dist(e.touches);
+      if (lastDist) {
+        zoom = Math.max(0.2, Math.min(3.0, lastZoom * (d / lastDist)));
+        applyZoom();
+      }
+    }
+  }, { passive: false });
+
+  document.getElementById('image-container').addEventListener('touchend', e => {
+    if (e.touches.length < 2) lastDist = null;
+  }, { passive: true });
+})();
 
 // ══════════════════════════════════════════
 // Keyboard shortcuts
