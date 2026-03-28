@@ -14,12 +14,17 @@
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f1ee; color: #2c2c2c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 /* ── Header ── */
-header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .header-left { flex-shrink: 0; }
 .header-left h1 { font-size: 15px; font-weight: 600; }
 .header-left .subtitle { font-size: 10px; opacity: 0.6; margin-top: 1px; }
-.header-center { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center; }
-.header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+
+/* ── Version Toggle ── */
+.version-toggle { display: flex; background: rgba(255,255,255,0.08); border-radius: 6px; padding: 2px; gap: 2px; }
+.version-btn { padding: 6px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; background: transparent; color: rgba(234,229,225,0.5); font-family: inherit; transition: all 0.2s; white-space: nowrap; }
+.version-btn.active { background: #CD1543; color: white; }
+.version-btn:hover:not(.active) { color: #EAE5E1; background: rgba(255,255,255,0.1); }
 
 /* ── Buttons ── */
 .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; transition: opacity 0.15s; white-space: nowrap; font-family: inherit; }
@@ -27,13 +32,6 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .btn-primary { background: #CD1543; color: white; }
 .btn-secondary { background: #EAE5E1; color: #3D2C2B; }
 .btn-ghost { background: transparent; color: #EAE5E1; border: 1px solid rgba(255,255,255,0.3); }
-
-/* ── Version selector ── */
-#version-select { background: rgba(255,255,255,0.1); color: #EAE5E1; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 5px 10px; font-size: 11px; font-weight: 600; cursor: pointer; max-width: 240px; font-family: inherit; }
-#version-select option { background: #3D2C2B; }
-
-.add-version-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #EAE5E1; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; flex-shrink: 0; transition: background 0.15s; }
-.add-version-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* ── Sync dot ── */
 .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #aaa; flex-shrink: 0; transition: background 0.3s; }
@@ -48,13 +46,27 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .user-avatar { width: 22px; height: 22px; border-radius: 50%; background: #CD1543; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; flex-shrink: 0; }
 .user-name-label { font-size: 11px; color: #EAE5E1; }
 
+/* ── Sheet Tabs Bar ── */
+.sheet-tabs-bar { background: #4a3a39; display: flex; align-items: center; padding: 0 16px; gap: 2px; flex-shrink: 0; overflow-x: auto; }
+.sheet-tab { padding: 8px 14px; border: none; background: transparent; color: rgba(234,229,225,0.5); font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.sheet-tab:hover { color: #EAE5E1; background: rgba(255,255,255,0.05); }
+.sheet-tab.active { color: #EAE5E1; border-bottom-color: #CD1543; }
+
 /* ── Workspace ── */
 .workspace { display: flex; flex: 1; overflow: hidden; }
 
 /* ── Sidebar ── */
 .sidebar { width: 320px; background: white; border-right: 1px solid #d8d0c8; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; }
-.sidebar-header { padding: 12px 14px 8px; border-bottom: 1px solid #e8e2dc; display: flex; align-items: center; justify-content: space-between; }
-.sidebar-header h2 { font-size: 13px; font-weight: 700; color: #3D2C2B; }
+
+/* ── Sidebar Tabs ── */
+.sidebar-tabs { display: flex; border-bottom: 1px solid #e8e2dc; flex-shrink: 0; }
+.sidebar-tab { flex: 1; padding: 10px 8px; border: none; background: transparent; font-size: 11px; font-weight: 700; color: #aaa; cursor: pointer; font-family: inherit; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.sidebar-tab:hover { color: #666; }
+.sidebar-tab.active { color: #3D2C2B; border-bottom-color: #CD1543; }
+
+/* ── Notes Panel ── */
+.sidebar-panel { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+.sidebar-panel.active { display: flex; }
 
 .stats-bar { display: flex; gap: 14px; padding: 6px 14px; background: #faf8f6; border-bottom: 1px solid #e8e2dc; font-size: 11px; color: #666; }
 .stat { display: flex; align-items: center; gap: 4px; }
@@ -68,16 +80,15 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .filter-chip.high     { color: #CD1543; background: #fdeef2; }
 .filter-chip.medium   { color: #b57800; background: #fdf5e0; }
 .filter-chip.low      { color: #777;    background: #f0f0f0; }
+.filter-chip.all      { color: #3D2C2B; background: #f4f1ee; }
+.filter-chip.question { color: #1a6eb5; background: #e8f2fc; }
+.filter-chip.change   { color: #b55a00; background: #fdf0e0; }
+.filter-chip.confirmed{ color: #1a7a42; background: #e6f5ec; }
+.filter-chip.hold     { color: #7a1a6e; background: #f5e6f3; }
 .room-filter-bar { padding: 4px 10px 8px; }
 .room-filter-bar select { width: 100%; padding: 5px 8px; border: 1.5px solid #e0d8d0; border-radius: 5px; font-size: 11px; font-family: inherit; background: #faf8f6; color: #2c2c2c; cursor: pointer; }
-.room-filter-bar select:focus { outline: none; border-color: #CD1543; }
 .clear-filters { font-size: 10px; color: #CD1543; cursor: pointer; padding: 0 12px 6px; display: none; }
 .clear-filters.visible { display: block; }
-.filter-chip.all     { color: #3D2C2B; background: #f4f1ee; }
-.filter-chip.question{ color: #1a6eb5; background: #e8f2fc; }
-.filter-chip.change  { color: #b55a00; background: #fdf0e0; }
-.filter-chip.confirmed{color: #1a7a42; background: #e6f5ec; }
-.filter-chip.hold    { color: #7a1a6e; background: #f5e6f3; }
 
 .notes-list { flex: 1; overflow-y: auto; padding: 8px; }
 
@@ -95,8 +106,6 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .note-room { font-size: 10px; color: #888; margin-top: 2px; }
 .note-meta { font-size: 10px; color: #bbb; margin-top: 4px; line-height: 1.4; }
 .note-meta .author { font-weight: 600; color: #999; }
-.note-meta .edited { font-style: italic; }
-
 .card-actions { display: flex; gap: 1px; flex-shrink: 0; }
 .card-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 13px; padding: 2px 4px; transition: color 0.15s; line-height: 1; }
 .card-btn.edit:hover  { color: #1a6eb5; }
@@ -105,32 +114,64 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .card-btn.heart.loved { color: #CD1543; }
 .card-btn.heart:hover { color: #CD1543; }
 .heart-count          { font-size: 10px; font-weight: 600; }
-
 .note-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
 .category-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
-
 .empty-state { text-align: center; padding: 40px 16px; color: #aaa; font-size: 13px; line-height: 1.8; }
 
-.sidebar-footer { padding: 10px 12px; border-top: 1px solid #e8e2dc; display: flex; gap: 6px; }
+.sidebar-footer { padding: 10px 12px; border-top: 1px solid #e8e2dc; display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ── Changes Panel ── */
+.changes-panel-content { flex: 1; overflow-y: auto; padding: 12px; }
+.change-card { background: #faf8f6; border: 1.5px solid #e0d8d0; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+.change-card h4 { font-size: 12px; font-weight: 700; color: #3D2C2B; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.change-card p { font-size: 11px; color: #666; line-height: 1.5; }
+.change-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px; text-transform: uppercase; }
+.change-badge.added { background: #d4edda; color: #155724; }
+.change-badge.modified { background: #fff3cd; color: #856404; }
+.change-badge.major { background: #fdeef2; color: #CD1543; }
+.change-summary-header { font-size: 13px; font-weight: 700; color: #3D2C2B; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #e8e2dc; display: flex; align-items: center; gap: 8px; }
+.sqft-badge { background: #CD1543; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+
+/* ── Markups Panel ── */
+.markups-list { flex: 1; overflow-y: auto; padding: 8px; }
+.markup-card { background: #faf8f6; border: 1.5px solid #e0d8d0; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s; }
+.markup-card:hover { border-color: #b0a090; background: #f0ece8; }
+.markup-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.markup-card-body { flex: 1; min-width: 0; }
+.markup-card-body .markup-label { font-size: 12px; font-weight: 600; color: #2c2c2c; }
+.markup-card-body .markup-meta { font-size: 10px; color: #aaa; }
+.markup-del { background: none; border: none; cursor: pointer; color: #ccc; font-size: 15px; padding: 2px 4px; transition: color 0.15s; }
+.markup-del:hover { color: #CD1543; }
 
 /* ── Canvas ── */
 .canvas-area { flex: 1; overflow: auto; position: relative; background: #e0dbd5; }
 .load-prompt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #999; font-size: 14px; }
-#image-container { position: relative; display: inline-block; cursor: crosshair; user-select: none; }
+#image-container { position: relative; display: inline-block; user-select: none; }
 #floor-plan-img { display: block; max-width: none; }
+
+/* ── Drawing Toolbar ── */
+.draw-toolbar { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); display: flex; background: white; border-radius: 10px; padding: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); z-index: 20; gap: 2px; align-items: center; }
+.draw-tool-btn { width: 34px; height: 34px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; background: transparent; color: #666; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-family: inherit; position: relative; }
+.draw-tool-btn:hover { background: #f0ece8; color: #3D2C2B; }
+.draw-tool-btn.active { background: #3D2C2B; color: white; }
+.draw-tool-btn.active.heart-tool { background: #CD1543; }
+.draw-tool-btn[title]:hover::after { content: attr(title); position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 6px; background: rgba(0,0,0,0.8); color: white; font-size: 10px; padding: 3px 8px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
+.toolbar-sep { width: 1px; height: 22px; background: #e0d8d0; margin: 0 2px; }
+.color-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: border-color 0.15s; }
+.color-swatch:hover, .color-swatch.active { border-color: #3D2C2B; }
+
+/* ── SVG Drawing Layer ── */
+#draw-layer { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5; }
+#draw-layer.drawing { pointer-events: all; cursor: crosshair; }
+#draw-layer.drawing.arrow-cursor { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='18'%3E↗%3C/text%3E%3C/svg%3E") 12 12, crosshair; }
+#draw-layer.drawing.rect-cursor { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Crect x='4' y='4' width='16' height='16' fill='none' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E") 12 12, crosshair; }
+#draw-layer.drawing.text-cursor { cursor: text; }
 
 /* ── Pins ── */
 .pin-marker { position: absolute; width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: translate(-50%,-100%) rotate(-45deg); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 10; transition: transform 0.15s; }
 .pin-marker:hover { transform: translate(-50%,-100%) rotate(-45deg) scale(1.2); }
 .pin-marker.highlighted { transform: translate(-50%,-100%) rotate(-45deg) scale(1.3); box-shadow: 0 3px 12px rgba(0,0,0,0.4); }
 .pin-number { transform: rotate(45deg); font-size: 10px; font-weight: 700; color: white; line-height: 1; }
-
-/* ── Mode toggle ── */
-.mode-toggle { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); display: flex; background: white; border-radius: 20px; padding: 3px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); z-index: 20; }
-.mode-btn { padding: 5px 14px; border: none; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; color: #888; font-family: inherit; transition: all 0.15s; }
-.mode-btn.active { background: #3D2C2B; color: white; }
-.mode-btn#mode-heart.active { background: #CD1543; }
-#image-container.heart-mode { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E♥%3C/text%3E%3C/svg%3E") 12 12, crosshair; }
 
 /* ── Plan heart markers ── */
 .heart-marker { position: absolute; font-size: 22px; transform: translate(-50%, -100%); cursor: pointer; z-index: 10; line-height: 1; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); transition: transform 0.15s; user-select: none; }
@@ -166,13 +207,8 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .name-preset:hover { border-color: #CD1543; color: #CD1543; background: #fff5f7; }
 .name-preset.selected { border-color: #CD1543; color: #CD1543; background: #fff5f7; }
 
-/* ── Mobile sidebar toggle FAB ── */
-.notes-fab { display: none; position: fixed; bottom: 20px; left: 20px; z-index: 60; background: #3D2C2B; color: #EAE5E1; border: none; border-radius: 24px; padding: 10px 16px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,0.3); gap: 6px; align-items: center; }
-.notes-fab-count { background: #CD1543; color: white; border-radius: 10px; padding: 1px 6px; font-size: 11px; }
-
-/* ── Sidebar backdrop (mobile) ── */
-.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 89; }
-.sidebar-backdrop.open { display: block; }
+/* ── Arrow label input ── */
+.arrow-label-input { position: absolute; z-index: 100; background: white; border: 2px solid #CD1543; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-family: inherit; box-shadow: 0 3px 12px rgba(0,0,0,0.2); min-width: 160px; }
 
 /* ── Category / priority colors ── */
 .cat-question  { background: #1a6eb5; }
@@ -184,89 +220,46 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 .tag-confirmed { background: #e6f5ec; color: #1a7a42; }
 .tag-hold      { background: #f5e6f3; color: #7a1a6e; }
 
+/* ── Mobile FAB ── */
+.notes-fab { display: none; position: fixed; bottom: 20px; left: 20px; z-index: 60; background: #3D2C2B; color: #EAE5E1; border: none; border-radius: 24px; padding: 10px 16px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 3px 12px rgba(0,0,0,0.3); gap: 6px; align-items: center; }
+.notes-fab-count { background: #CD1543; color: white; border-radius: 10px; padding: 1px 6px; font-size: 11px; }
+.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 89; }
+.sidebar-backdrop.open { display: block; }
+
 /* ════════════════════════════
    RESPONSIVE — MOBILE
    ════════════════════════════ */
 @media (max-width: 768px) {
-
-  /* Header — 2 rows */
   header { flex-wrap: wrap; padding: 8px 12px; gap: 6px; }
-  .header-left { flex: 1; min-width: 0; }
   .header-left h1 { font-size: 13px; }
   .header-left .subtitle { display: none; }
-  .header-center { order: 3; width: 100%; justify-content: flex-start; gap: 6px; }
-  .header-right { gap: 6px; }
-  #version-select { max-width: none; flex: 1; font-size: 12px; }
+  .version-toggle { flex: 1; }
+  .version-btn { flex: 1; text-align: center; font-size: 11px; padding: 6px 8px; }
   .user-name-label { display: none; }
-  .btn-ghost { padding: 5px 10px; font-size: 11px; }
-
-  /* Workspace — canvas fills screen */
+  .sheet-tabs-bar { padding: 0 8px; }
+  .sheet-tab { padding: 8px 10px; font-size: 10px; }
   .workspace { position: relative; }
-
-  /* Sidebar — bottom drawer */
   .sidebar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    width: 100%;
-    height: 75vh;
-    z-index: 90;
-    border-right: none;
-    border-top: 2px solid #d8d0c8;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 75vh; z-index: 90;
+    border-right: none; border-top: 2px solid #d8d0c8;
     border-radius: 16px 16px 0 0;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
+    transform: translateY(100%); transition: transform 0.3s ease;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
   }
   .sidebar.open { transform: translateY(0); }
-
-  /* Sidebar drag handle */
-  .sidebar-header::before {
-    content: '';
-    display: block;
-    width: 40px; height: 4px;
-    background: #d8d0c8;
-    border-radius: 2px;
-    margin: 0 auto 10px;
-    position: absolute;
-    top: 8px; left: 50%; transform: translateX(-50%);
-  }
-  .sidebar-header { position: relative; padding-top: 20px; }
-
-  /* Show FAB */
+  .sidebar-tabs { position: relative; padding-top: 12px; }
+  .sidebar-tabs::before { content: ''; display: block; width: 40px; height: 4px; background: #d8d0c8; border-radius: 2px; margin: 0 auto 8px; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); }
   .notes-fab { display: flex; }
-
-  /* Hide zoom controls bottom-right (move up to avoid FAB) */
   .zoom-controls { bottom: 72px; right: 12px; }
-
-  /* Mode toggle — larger tap targets */
-  .mode-toggle { top: 8px; }
-  .mode-btn { padding: 7px 16px; font-size: 13px; }
-
-  /* Modals — full width, slide from bottom */
+  .draw-toolbar { top: 8px; padding: 3px; }
+  .draw-tool-btn { width: 30px; height: 30px; font-size: 14px; }
   .modal-overlay { align-items: flex-end; padding: 0; }
-  .modal {
-    width: 100%;
-    border-radius: 16px 16px 0 0;
-    max-height: 92vh;
-    padding: 20px 16px 32px;
-    animation: slide-up 0.25s ease;
-  }
+  .modal { width: 100%; border-radius: 16px 16px 0 0; max-height: 92vh; padding: 20px 16px 32px; animation: slide-up 0.25s ease; }
   @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-  /* Form fields — larger on mobile */
   .form-group input, .form-group textarea, .form-group select { font-size: 16px; padding: 10px 12px; }
-  .form-group textarea { height: 90px; }
-  .modal-actions .btn { padding: 10px 16px; font-size: 13px; }
-  .modal-actions .btn-primary { flex: 1; }
-
-  /* Name presets — full width */
   .name-presets { gap: 6px; }
   .name-preset { flex: 1; text-align: center; padding: 10px 8px; }
-
-  /* Filters */
-  .filter-bar { gap: 5px; }
-  .filter-chip { padding: 5px 10px; font-size: 11px; }
-  .room-filter-bar select { font-size: 14px; padding: 8px 10px; }
 }
 </style>
 </head>
@@ -279,15 +272,13 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
     <div class="subtitle">Floor Plan Review · Brio Design Homes</div>
   </div>
 
-  <div class="header-center">
-    <select id="version-select" onchange="selectVersion(this.value)">
-      <option value="">— Select Plan Version —</option>
-    </select>
-    <button class="add-version-btn" onclick="openAddVersionModal()" title="Add new plan version">+</button>
-    <div class="sync-dot syncing" id="sync-dot" title="Connecting..."></div>
+  <div class="version-toggle">
+    <button class="version-btn active" data-version="v1" onclick="switchVersion('v1')">V1 · Mar 17</button>
+    <button class="version-btn" data-version="v2" onclick="switchVersion('v2')">V2 · Mar 27</button>
   </div>
 
   <div class="header-right">
+    <div class="sync-dot syncing" id="sync-dot" title="Connecting..."></div>
     <div class="user-badge" onclick="openUserModal()" title="Change name">
       <div class="user-avatar" id="user-avatar">?</div>
       <span class="user-name-label" id="user-name-display">Set name</span>
@@ -296,88 +287,138 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
   </div>
 </header>
 
+<!-- ══ Sheet Tabs ══ -->
+<div class="sheet-tabs-bar">
+  <button class="sheet-tab active" data-sheet="6" onclick="switchSheet(6)">Floor Plan</button>
+  <button class="sheet-tab" data-sheet="1" onclick="switchSheet(1)">Front / Rear</button>
+  <button class="sheet-tab" data-sheet="2" onclick="switchSheet(2)">Side Elevations</button>
+  <button class="sheet-tab" data-sheet="3" onclick="switchSheet(3)">3D Renderings</button>
+  <button class="sheet-tab" data-sheet="4" onclick="switchSheet(4)">Site Plan</button>
+  <button class="sheet-tab" data-sheet="5" onclick="switchSheet(5)">Foundation</button>
+  <button class="sheet-tab" data-sheet="7" onclick="switchSheet(7)">Roof Plan</button>
+</div>
+
 <!-- ══ Workspace ══ -->
 <div class="workspace">
 
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <h2>Review Notes</h2>
-      <span id="note-count" style="font-size:11px;color:#aaa">—</span>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" data-panel="notes" onclick="switchSidebarTab('notes')">Notes</button>
+      <button class="sidebar-tab" data-panel="changes" onclick="switchSidebarTab('changes')">Changes</button>
+      <button class="sidebar-tab" data-panel="markups" onclick="switchSidebarTab('markups')">Markups</button>
     </div>
 
-    <div class="stats-bar" id="stats-bar" style="display:none">
-      <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#CD1543;display:inline-block"></span>&nbsp;<strong id="stat-high">0</strong> High</div>
-      <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#f0a020;display:inline-block"></span>&nbsp;<strong id="stat-med">0</strong> Med</div>
-      <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#aaa;display:inline-block"></span>&nbsp;<strong id="stat-low">0</strong> Low</div>
-    </div>
-
-    <div class="filter-section">
-      <div class="filter-label">Category</div>
-      <div class="filter-bar">
-        <div class="filter-chip all active" onclick="setCatFilter('all',this)">All</div>
-        <div class="filter-chip question" onclick="setCatFilter('question',this)">Questions</div>
-        <div class="filter-chip change" onclick="setCatFilter('change',this)">Changes</div>
-        <div class="filter-chip confirmed" onclick="setCatFilter('confirmed',this)">Confirmed</div>
-        <div class="filter-chip hold" onclick="setCatFilter('hold',this)">On Hold</div>
+    <!-- Notes Panel -->
+    <div class="sidebar-panel active" id="panel-notes">
+      <div class="stats-bar" id="stats-bar" style="display:none">
+        <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#CD1543;display:inline-block"></span>&nbsp;<strong id="stat-high">0</strong> High</div>
+        <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#f0a020;display:inline-block"></span>&nbsp;<strong id="stat-med">0</strong> Med</div>
+        <div class="stat"><span style="width:8px;height:8px;border-radius:50%;background:#aaa;display:inline-block"></span>&nbsp;<strong id="stat-low">0</strong> Low</div>
       </div>
-      <div class="filter-label">Priority</div>
-      <div class="filter-bar">
-        <div class="filter-chip all active" id="pri-all" onclick="setPriFilter('all',this)">All</div>
-        <div class="filter-chip high"   onclick="setPriFilter('high',this)">High</div>
-        <div class="filter-chip medium" onclick="setPriFilter('medium',this)">Medium</div>
-        <div class="filter-chip low"    onclick="setPriFilter('low',this)">Low</div>
+      <div class="filter-section">
+        <div class="filter-label">Category</div>
+        <div class="filter-bar">
+          <div class="filter-chip all active" onclick="setCatFilter('all',this)">All</div>
+          <div class="filter-chip question" onclick="setCatFilter('question',this)">Questions</div>
+          <div class="filter-chip change" onclick="setCatFilter('change',this)">Changes</div>
+          <div class="filter-chip confirmed" onclick="setCatFilter('confirmed',this)">Confirmed</div>
+          <div class="filter-chip hold" onclick="setCatFilter('hold',this)">On Hold</div>
+        </div>
+        <div class="filter-label">Priority</div>
+        <div class="filter-bar">
+          <div class="filter-chip all active" id="pri-all" onclick="setPriFilter('all',this)">All</div>
+          <div class="filter-chip high"   onclick="setPriFilter('high',this)">High</div>
+          <div class="filter-chip medium" onclick="setPriFilter('medium',this)">Medium</div>
+          <div class="filter-chip low"    onclick="setPriFilter('low',this)">Low</div>
+        </div>
+        <div class="filter-label">Room</div>
+        <div class="room-filter-bar">
+          <select id="room-filter" onchange="setRoomFilter(this.value)">
+            <option value="">All Rooms</option>
+            <option value="Great Room">Great Room</option>
+            <option value="Dining">Dining</option>
+            <option value="Kitchen">Kitchen</option>
+            <option value="Pantry">Pantry</option>
+            <option value="Primary Bedroom">Primary Bedroom</option>
+            <option value="Primary Bath">Primary Bath</option>
+            <option value="Primary Closet (W.I.C.)">Primary Closet (W.I.C.)</option>
+            <option value="Bedroom #2">Bedroom #2</option>
+            <option value="Bedroom #3">Bedroom #3</option>
+            <option value="Full Bath">Full Bath</option>
+            <option value="Mudroom">Mudroom</option>
+            <option value="Laundry">Laundry</option>
+            <option value="Covered Patio">Covered Patio</option>
+            <option value="Deck">Deck</option>
+            <option value="Garage">Garage</option>
+            <option value="Entry / Foyer">Entry / Foyer</option>
+            <option value="Hallway">Hallway</option>
+            <option value="General / Whole Floor">General / Whole Floor</option>
+          </select>
+        </div>
+        <div class="clear-filters" id="clear-filters" onclick="clearAllFilters()">✕ Clear all filters</div>
       </div>
-      <div class="filter-label">Room</div>
-      <div class="room-filter-bar">
-        <select id="room-filter" onchange="setRoomFilter(this.value)">
-          <option value="">All Rooms</option>
-          <option value="Great Room">Great Room</option>
-          <option value="Dining">Dining</option>
-          <option value="Kitchen">Kitchen</option>
-          <option value="Pantry">Pantry</option>
-          <option value="Primary Bedroom">Primary Bedroom</option>
-          <option value="Primary Bath">Primary Bath</option>
-          <option value="Primary Closet (W.I.C.)">Primary Closet (W.I.C.)</option>
-          <option value="Bedroom #2">Bedroom #2</option>
-          <option value="Bedroom #3">Bedroom #3</option>
-          <option value="Full Bath">Full Bath</option>
-          <option value="Mudroom">Mudroom</option>
-          <option value="Laundry">Laundry</option>
-          <option value="Covered Patio">Covered Patio</option>
-          <option value="Deck">Deck</option>
-          <option value="Garage">Garage</option>
-          <option value="Entry / Foyer">Entry / Foyer</option>
-          <option value="Hallway">Hallway</option>
-          <option value="General / Whole Floor">General / Whole Floor</option>
-        </select>
+      <div class="notes-list" id="notes-list">
+        <div class="empty-state">Click anywhere on the plan to add a note.</div>
       </div>
-      <div class="clear-filters" id="clear-filters" onclick="clearAllFilters()">✕ Clear all filters</div>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary" style="flex:1;font-size:11px" onclick="printReport()">Print Report</button>
+        <button class="btn btn-secondary" style="font-size:11px" onclick="exportNotes()">Export JSON</button>
+      </div>
     </div>
 
-    <div class="notes-list" id="notes-list">
-      <div class="empty-state">📌<br>Select a plan version above,<br>then click anywhere on the plan<br>to add the first note.</div>
+    <!-- Changes Panel -->
+    <div class="sidebar-panel" id="panel-changes">
+      <div class="changes-panel-content" id="changes-content"></div>
     </div>
 
-    <div class="sidebar-footer">
-      <button class="btn btn-secondary" style="flex:1;font-size:11px" onclick="printReport()">Print Report</button>
-      <button class="btn btn-secondary" style="font-size:11px" onclick="exportNotes()">Export JSON</button>
+    <!-- Markups Panel -->
+    <div class="sidebar-panel" id="panel-markups">
+      <div style="padding:10px 12px 6px;font-size:11px;color:#888;border-bottom:1px solid #e8e2dc">
+        Drawings for the current version &amp; sheet. Visible to everyone.
+      </div>
+      <div class="markups-list" id="markups-list">
+        <div class="empty-state">No markups yet.<br>Use the toolbar above the plan to draw.</div>
+      </div>
     </div>
   </div>
 
   <!-- Canvas -->
   <div class="canvas-area" id="canvas-area">
-    <!-- Mode toggle -->
-    <div class="mode-toggle" id="mode-toggle" style="display:none">
-      <button class="mode-btn active" id="mode-note" onclick="setMode('note')">📌 Note</button>
-      <button class="mode-btn" id="mode-heart" onclick="setMode('heart')">♥ Heart</button>
+    <!-- Drawing Toolbar -->
+    <div class="draw-toolbar" id="draw-toolbar">
+      <button class="draw-tool-btn active" data-tool="pan" onclick="setDrawTool('pan')" title="Pan / Pin mode">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a1 1 0 0 1 1 1v4.5a.5.5 0 0 0 1 0V3a1 1 0 1 1 2 0v3.5a.5.5 0 0 0 1 0V4a1 1 0 1 1 2 0v7a5 5 0 0 1-5 5H8.5A5.5 5.5 0 0 1 3 10.5V7a1 1 0 0 1 2 0v1.5a.5.5 0 0 0 1 0V2a1 1 0 0 1 1-1z"/></svg>
+      </button>
+      <button class="draw-tool-btn heart-tool" data-tool="heart" onclick="setDrawTool('heart')" title="Love it">♥</button>
+      <div class="toolbar-sep"></div>
+      <button class="draw-tool-btn" data-tool="pen" onclick="setDrawTool('pen')" title="Freehand draw">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5z"/></svg>
+      </button>
+      <button class="draw-tool-btn" data-tool="arrow" onclick="setDrawTool('arrow')" title="Extension arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+      </button>
+      <button class="draw-tool-btn" data-tool="rect" onclick="setDrawTool('rect')" title="Highlight area">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>
+      </button>
+      <button class="draw-tool-btn" data-tool="text" onclick="setDrawTool('text')" title="Text label">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.258 3h-8.51l-.083 2.46h.479c.26-1.544.758-1.783 2.693-1.845l.424-.013v7.827c0 .663-.144.82-1.3.923v.52h4.082v-.52c-1.162-.103-1.306-.26-1.306-.923V3.602l.431.013c1.934.062 2.434.301 2.693 1.846h.479L12.258 3z"/></svg>
+      </button>
+      <div class="toolbar-sep"></div>
+      <button class="draw-tool-btn" onclick="undoLastDrawing()" title="Undo last">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/></svg>
+      </button>
+      <div class="toolbar-sep"></div>
+      <div class="color-swatch active" style="background:#CD1543" data-color="#CD1543" onclick="setDrawColor('#CD1543',this)"></div>
+      <div class="color-swatch" style="background:#1a6eb5" data-color="#1a6eb5" onclick="setDrawColor('#1a6eb5',this)"></div>
+      <div class="color-swatch" style="background:#1a7a42" data-color="#1a7a42" onclick="setDrawColor('#1a7a42',this)"></div>
+      <div class="color-swatch" style="background:#b55a00" data-color="#b55a00" onclick="setDrawColor('#b55a00',this)"></div>
+      <div class="color-swatch" style="background:#333" data-color="#333333" onclick="setDrawColor('#333333',this)"></div>
     </div>
-    <div class="load-prompt" id="load-prompt">
-      <div style="font-size:48px">🏠</div>
-      <p>Select a plan version from the dropdown above</p>
-    </div>
-    <div id="image-container" style="display:none" onclick="handleCanvasClick(event)">
+
+    <div id="image-container" onclick="handleCanvasClick(event)">
       <img id="floor-plan-img" src="" alt="Floor Plan">
+      <svg id="draw-layer" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
 
@@ -385,17 +426,13 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
 
 <!-- Mobile sidebar backdrop -->
 <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeMobileSidebar()"></div>
-
-<!-- Mobile notes FAB -->
-<button class="notes-fab" id="notes-fab" onclick="toggleMobileSidebar()">
-  📋 Notes <span class="notes-fab-count" id="fab-count">0</span>
-</button>
+<button class="notes-fab" id="notes-fab" onclick="toggleMobileSidebar()">Notes <span class="notes-fab-count" id="fab-count">0</span></button>
 
 <!-- Zoom controls -->
-<div class="zoom-controls" id="zoom-controls" style="display:none">
+<div class="zoom-controls" id="zoom-controls">
   <button class="zoom-btn" onclick="adjustZoom(0.15)">+</button>
   <div class="zoom-label" id="zoom-label">100%</div>
-  <button class="zoom-btn" onclick="adjustZoom(-0.15)">−</button>
+  <button class="zoom-btn" onclick="adjustZoom(-0.15)">-</button>
   <button class="zoom-btn" onclick="resetZoom()" style="font-size:12px">⊡</button>
 </div>
 
@@ -405,7 +442,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
     <div class="modal-head" style="margin-bottom:8px">
       <h3>Who are you?</h3>
     </div>
-    <p style="font-size:13px;color:#888;margin-bottom:16px;line-height:1.5">Your name will appear on every note you add, so everyone knows who said what.</p>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;line-height:1.5">Your name will appear on every note and markup you add.</p>
     <div class="name-presets">
       <button class="name-preset" onclick="selectPreset('Stephen',this)">Stephen</button>
       <button class="name-preset" onclick="selectPreset('Lindsay',this)">Lindsay</button>
@@ -418,7 +455,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
       <input type="text" id="user-name-input" placeholder="Your name...">
     </div>
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveUser()" style="width:100%;padding:10px">Let's go →</button>
+      <button class="btn btn-primary" onclick="saveUser()" style="width:100%;padding:10px">Let's go</button>
     </div>
   </div>
 </div>
@@ -486,30 +523,38 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 10px 16px; display: flex;
   </div>
 </div>
 
-<!-- ══ Modal: Add Version ══ -->
-<div class="modal-overlay" id="version-modal">
-  <div class="modal" style="width:380px">
+<!-- ══ Modal: Arrow Label ══ -->
+<div class="modal-overlay" id="arrow-modal">
+  <div class="modal" style="width:340px">
     <div class="modal-head">
-      <h3>Add New Revision</h3>
-      <button class="modal-close" onclick="closeVersionModal()">×</button>
-    </div>
-    <p style="font-size:12px;color:#888;margin-bottom:16px;line-height:1.5">Use this when Brio sends an updated plan. Notes from previous versions are preserved and still viewable.</p>
-    <div class="form-group">
-      <label>Version Label</label>
-      <input type="text" id="version-name" placeholder="e.g. Version 2 — April 5, 2026">
+      <h3>Extension Label</h3>
+      <button class="modal-close" onclick="cancelArrow()">×</button>
     </div>
     <div class="form-group">
-      <label>Plan Image File</label>
-      <input type="text" id="version-image" placeholder="filename.png (must be uploaded to GitHub repo)">
-      <div style="font-size:10px;color:#aaa;margin-top:4px">Upload the new PNG to the GitHub repo first, then enter the filename here.</div>
-    </div>
-    <div class="form-group">
-      <label>Notes <span style="font-weight:400;text-transform:none">(optional)</span></label>
-      <input type="text" id="version-desc" placeholder="e.g. Revised kitchen layout, updated garage angle">
+      <label>What should this arrow say?</label>
+      <input type="text" id="arrow-label-text" placeholder='e.g. "Extend 2ft" or "Make wider"'>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeVersionModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveVersion()">Add Version</button>
+      <button class="btn btn-secondary" onclick="cancelArrow()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveArrow()">Add Arrow</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Modal: Text Label ══ -->
+<div class="modal-overlay" id="text-modal">
+  <div class="modal" style="width:340px">
+    <div class="modal-head">
+      <h3>Add Text Label</h3>
+      <button class="modal-close" onclick="cancelTextLabel()">×</button>
+    </div>
+    <div class="form-group">
+      <label>Label text</label>
+      <input type="text" id="text-label-text" placeholder="Type your label...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="cancelTextLabel()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTextLabel()">Add Label</button>
     </div>
   </div>
 </div>
@@ -530,27 +575,69 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ══════════════════════════════════════════
+// Sheet & Version Config
+// ══════════════════════════════════════════
+const SHEETS = {
+  1: { label: 'Front / Rear Elevations', short: 'A-1' },
+  2: { label: 'Side Elevations', short: 'A-2' },
+  3: { label: '3D Exterior Renderings', short: 'A-3' },
+  4: { label: 'Site Plan', short: 'A-4' },
+  5: { label: 'Foundation Plan', short: 'A-5' },
+  6: { label: 'Main Floor Plan', short: 'A-6' },
+  7: { label: 'Roof Plan', short: 'A-7' },
+};
+
+const VERSIONS = {
+  v1: { label: 'Version 1 — March 17, 2026', sqft: '2,420', prefix: 'v1-sheet-' },
+  v2: { label: 'Version 2 — March 27, 2026', sqft: '2,500', prefix: 'v2-sheet-' },
+};
+
+const CHANGES = [
+  { title: 'Living Area Increased', badge: 'major', text: 'Total living area grew from 2,420 to 2,500 sq ft (+80 sq ft). Additional space distributed across the main living areas.' },
+  { title: 'Front Elevation Refined', badge: 'modified', text: 'Window configurations adjusted on the front facade. Entry porch columns and detailing updated for improved curb appeal.' },
+  { title: 'Rear Elevation Updated', badge: 'modified', text: 'Window arrangement modified on the rear walkout level. Updated proportions to match the enlarged footprint.' },
+  { title: 'Right Side Deck/Balcony', badge: 'modified', text: 'Right side elevation shows an added or refined deck railing at the upper level. Left side garage proportions subtly adjusted.' },
+  { title: 'Floor Plan Layout Adjusted', badge: 'major', text: 'Room proportions adjusted to accommodate the 80 sq ft gain. Visible layout shifts in the bedroom wing and kitchen area — the most substantive change in V2.' },
+  { title: 'Foundation Enlarged', badge: 'modified', text: 'Foundation plan updated to match the enlarged main floor footprint. Lower level design still TBD.' },
+  { title: 'Roof Plan Modified', badge: 'modified', text: 'Roof plan shows a hatched area indicating a changed roof section to accommodate the wider floor plan.' },
+];
+
+// ══════════════════════════════════════════
 // State
 // ══════════════════════════════════════════
-let currentUser   = null;
-let currentVersionId = null;
-let versions      = [];
-let notes         = [];
-let planHearts    = [];
-let notesListener = null;
-let heartsListener = null;
-let pendingPin    = null;
-let editingId     = null;
-let filterCat  = 'all';
-let filterPri  = 'all';
-let filterRoom = '';
-let canvasMode    = 'note'; // 'note' | 'heart'
-let zoom          = 1.0;
-let highlightedId = null;
-let knownNoteIds  = new Set();
+let currentUser      = null;
+let currentVersion   = 'v1';
+let currentSheet     = 6;
+let notes            = [];
+let planHearts       = [];
+let markups          = [];
+let notesListener    = null;
+let heartsListener   = null;
+let markupsListener  = null;
+let pendingPin       = null;
+let editingId        = null;
+let filterCat        = 'all';
+let filterPri        = 'all';
+let filterRoom       = '';
+let zoom             = 1.0;
+let highlightedId    = null;
+let knownNoteIds     = new Set();
+
+// Drawing state
+let drawTool         = 'pan';
+let drawColor        = '#CD1543';
+let isDrawing        = false;
+let drawPoints       = [];
+let pendingArrow     = null;
+let pendingTextPos   = null;
 
 const CAT_LABELS = { question:'Question', change:'Change Request', confirmed:'Confirmed', hold:'On Hold' };
 const CAT_COLORS = { question:'#1a6eb5', change:'#b55a00', confirmed:'#1a7a42', hold:'#7a1a6e' };
+
+// ══════════════════════════════════════════
+// Version key for Firebase scoping
+// ══════════════════════════════════════════
+function versionKey() { return `${currentVersion}_sheet${currentSheet}`; }
 
 // ══════════════════════════════════════════
 // User Identity
@@ -595,103 +682,31 @@ function updateUserBadge() {
 }
 
 // ══════════════════════════════════════════
-// Versions
+// Version & Sheet Switching
 // ══════════════════════════════════════════
-function loadVersions() {
-  db.collection('versions').orderBy('addedAt', 'asc').onSnapshot(snap => {
-    versions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-    // Auto-seed Version 1 if Firestore is empty
-    if (versions.length === 0) {
-      db.collection('versions').add({
-        name: 'Version 1 — March 17, 2026',
-        imageFile: 'd94c9eaa-6.png',
-        description: 'First draft from Brio',
-        addedBy: 'System',
-        addedAt: firebase.firestore.Timestamp.fromDate(new Date('2026-03-17'))
-      });
-      return; // onSnapshot will fire again with the new version
-    }
-
-    renderVersionSelect();
-    setSyncStatus('synced');
-  }, err => { console.error(err); setSyncStatus('error'); });
+function switchVersion(v) {
+  currentVersion = v;
+  document.querySelectorAll('.version-btn').forEach(b => b.classList.toggle('active', b.dataset.version === v));
+  loadCurrentImage();
+  subscribeAll();
 }
 
-function renderVersionSelect() {
-  const sel = document.getElementById('version-select');
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">— Select Plan Version —</option>';
-  versions.forEach(v => {
-    const o = document.createElement('option');
-    o.value = v.id;
-    o.textContent = v.name + (v.description ? ` (${v.description})` : '');
-    sel.appendChild(o);
-  });
-  if (prev && versions.find(v => v.id === prev)) {
-    sel.value = prev;
-  } else if (!currentVersionId && versions.length === 1) {
-    sel.value = versions[0].id;
-    selectVersion(versions[0].id);
-  }
+function switchSheet(s) {
+  currentSheet = s;
+  document.querySelectorAll('.sheet-tab').forEach(b => b.classList.toggle('active', parseInt(b.dataset.sheet) === s));
+  loadCurrentImage();
+  subscribeAll();
 }
 
-function selectVersion(id) {
-  if (!id) return;
-  currentVersionId = id;
-  const v = versions.find(v => v.id === id);
-  if (v) loadFloorPlan(v.imageFile);
-  subscribeToNotes(id);
-  subscribeToPlanHearts(id);
-}
-
-function openAddVersionModal() {
-  const nextNum = versions.length + 1;
-  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  document.getElementById('version-name').value = `Version ${nextNum} — ${today}`;
-  document.getElementById('version-image').value = '';
-  document.getElementById('version-desc').value = '';
-  document.getElementById('version-modal').classList.add('open');
-  setTimeout(() => document.getElementById('version-image').focus(), 50);
-}
-
-function closeVersionModal() {
-  document.getElementById('version-modal').classList.remove('open');
-}
-
-async function saveVersion() {
-  const name      = document.getElementById('version-name').value.trim();
-  const imageFile = document.getElementById('version-image').value;
-  const desc      = document.getElementById('version-desc').value.trim();
-  if (!name)      { document.getElementById('version-name').focus(); return; }
-  if (!imageFile) { alert('Enter the image filename (e.g. plan-v2.png)'); document.getElementById('version-image').focus(); return; }
-
-  setSyncStatus('syncing');
-  try {
-    const ref = await db.collection('versions').add({
-      name, imageFile, description: desc,
-      addedBy: currentUser || 'Unknown',
-      addedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    closeVersionModal();
-    // Auto-select the new version
-    document.getElementById('version-select').value = ref.id;
-    selectVersion(ref.id);
-  } catch(e) { console.error(e); setSyncStatus('error'); }
-}
-
-// ══════════════════════════════════════════
-// Floor Plan Image
-// ══════════════════════════════════════════
-function loadFloorPlan(filename) {
+function loadCurrentImage() {
   const img = document.getElementById('floor-plan-img');
+  const filename = VERSIONS[currentVersion].prefix + currentSheet + '.png';
   img.onload = () => {
-    document.getElementById('load-prompt').style.display = 'none';
     document.getElementById('image-container').style.display = 'inline-block';
-    document.getElementById('zoom-controls').style.display = 'flex';
-    document.getElementById('mode-toggle').style.display = 'flex';
     fitToWindow();
     renderPins();
+    renderPlanHearts();
+    renderDrawings();
   };
   img.src = filename;
 }
@@ -703,9 +718,7 @@ function adjustZoom(delta) {
   zoom = Math.max(0.2, Math.min(3.0, zoom + delta));
   applyZoom();
 }
-
 function resetZoom() { fitToWindow(); }
-
 function fitToWindow() {
   const c = document.getElementById('canvas-area');
   const img = document.getElementById('floor-plan-img');
@@ -713,20 +726,33 @@ function fitToWindow() {
   zoom = Math.min((c.clientWidth - 40) / img.naturalWidth, (c.clientHeight - 40) / img.naturalHeight, 1.0);
   applyZoom();
 }
-
 function applyZoom() {
   const img = document.getElementById('floor-plan-img');
-  img.style.width  = (img.naturalWidth  * zoom) + 'px';
-  img.style.height = (img.naturalHeight * zoom) + 'px';
+  const container = document.getElementById('image-container');
+  const w = img.naturalWidth * zoom;
+  const h = img.naturalHeight * zoom;
+  img.style.width = w + 'px';
+  img.style.height = h + 'px';
+  const svg = document.getElementById('draw-layer');
+  svg.setAttribute('width', w);
+  svg.setAttribute('height', h);
+  svg.setAttribute('viewBox', `0 0 ${img.naturalWidth} ${img.naturalHeight}`);
   document.getElementById('zoom-label').textContent = Math.round(zoom * 100) + '%';
   renderPins();
   renderPlanHearts();
 }
 
 // ══════════════════════════════════════════
-// Notes — Firestore
+// Subscribe to all Firebase collections
 // ══════════════════════════════════════════
-function subscribeToNotes(versionId) {
+function subscribeAll() {
+  subscribeToNotes();
+  subscribeToPlanHearts();
+  subscribeToMarkups();
+}
+
+// ── Notes ──
+function subscribeToNotes() {
   if (notesListener) notesListener();
   notes = [];
   knownNoteIds = new Set();
@@ -734,7 +760,7 @@ function subscribeToNotes(versionId) {
   renderPins();
 
   notesListener = db.collection('notes')
-    .where('versionId', '==', versionId)
+    .where('versionKey', '==', versionKey())
     .orderBy('createdAt', 'asc')
     .onSnapshot(snap => {
       const incoming = new Set();
@@ -746,16 +772,16 @@ function subscribeToNotes(versionId) {
       notes.forEach(n => knownNoteIds.add(n.id));
       renderPins();
       renderSidebar(incoming);
+      setSyncStatus('synced');
     }, err => { console.error(err); setSyncStatus('error'); });
 }
 
-// ── Plan Hearts (Firestore) ──
-
-function subscribeToPlanHearts(versionId) {
+// ── Plan Hearts ──
+function subscribeToPlanHearts() {
   if (heartsListener) heartsListener();
   planHearts = [];
   heartsListener = db.collection('planHearts')
-    .where('versionId', '==', versionId)
+    .where('versionKey', '==', versionKey())
     .onSnapshot(snap => {
       planHearts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderPlanHearts();
@@ -764,15 +790,14 @@ function subscribeToPlanHearts(versionId) {
 
 async function placePlanHeart(x, y) {
   await db.collection('planHearts').add({
-    x, y,
-    versionId: currentVersionId,
+    x, y, versionKey: versionKey(),
     createdBy: currentUser,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
 }
 
 async function removePlanHeart(id, owner) {
-  if (owner !== currentUser) return; // can only remove your own
+  if (owner !== currentUser) return;
   await db.collection('planHearts').doc(id).delete();
 }
 
@@ -784,7 +809,7 @@ function renderPlanHearts() {
   planHearts.forEach(h => {
     const el = document.createElement('div');
     el.className = 'heart-marker';
-    el.style.left = (h.x * img.naturalWidth  * zoom) + 'px';
+    el.style.left = (h.x * img.naturalWidth * zoom) + 'px';
     el.style.top  = (h.y * img.naturalHeight * zoom) + 'px';
     el.style.color = h.createdBy === currentUser ? '#CD1543' : '#e87a96';
     el.innerHTML = `♥<div class="heart-tooltip">${esc(h.createdBy)}${h.createdBy === currentUser ? ' · click to remove' : ''}</div>`;
@@ -795,33 +820,391 @@ function renderPlanHearts() {
   });
 }
 
-// ── Canvas mode ──
-
-function setMode(mode) {
-  canvasMode = mode;
-  document.getElementById('mode-note').classList.toggle('active', mode === 'note');
-  document.getElementById('mode-heart').classList.toggle('active', mode === 'heart');
-  document.getElementById('image-container').classList.toggle('heart-mode', mode === 'heart');
+// ── Markups (drawings) ──
+function subscribeToMarkups() {
+  if (markupsListener) markupsListener();
+  markups = [];
+  markupsListener = db.collection('markups')
+    .where('versionKey', '==', versionKey())
+    .orderBy('createdAt', 'asc')
+    .onSnapshot(snap => {
+      markups = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderDrawings();
+      renderMarkupsList();
+    }, err => console.error(err));
 }
 
+// ══════════════════════════════════════════
+// Canvas Click Handler
+// ══════════════════════════════════════════
 function handleCanvasClick(e) {
-  if (!currentVersionId) { alert('Select a plan version first.'); return; }
   if (!currentUser) { openUserModal(); return; }
-  if (e.target.classList.contains('pin-marker') || e.target.classList.contains('pin-number')) return;
-  if (e.target.classList.contains('heart-marker') || e.target.closest('.heart-marker')) return;
+  if (e.target.closest('.pin-marker') || e.target.closest('.heart-marker')) return;
+
   const img = document.getElementById('floor-plan-img');
   const rect = document.getElementById('image-container').getBoundingClientRect();
   const x = (e.clientX - rect.left) / (img.naturalWidth * zoom);
   const y = (e.clientY - rect.top)  / (img.naturalHeight * zoom);
 
-  if (canvasMode === 'heart') {
+  if (drawTool === 'heart') {
     placePlanHeart(x, y);
-  } else {
+  } else if (drawTool === 'pan') {
     pendingPin = { x, y };
     openNoteModal(false);
+  } else if (drawTool === 'text') {
+    pendingTextPos = { x, y };
+    document.getElementById('text-label-text').value = '';
+    document.getElementById('text-modal').classList.add('open');
+    setTimeout(() => document.getElementById('text-label-text').focus(), 50);
   }
+  // pen, arrow, rect are handled by SVG mouse events
 }
 
+// ══════════════════════════════════════════
+// Drawing Tools
+// ══════════════════════════════════════════
+function setDrawTool(tool) {
+  drawTool = tool;
+  document.querySelectorAll('.draw-tool-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tool === tool);
+  });
+  const svg = document.getElementById('draw-layer');
+  const container = document.getElementById('image-container');
+  const isDrawMode = ['pen','arrow','rect'].includes(tool);
+  svg.classList.toggle('drawing', isDrawMode);
+  svg.classList.toggle('arrow-cursor', tool === 'arrow');
+  svg.classList.toggle('rect-cursor', tool === 'rect');
+  svg.classList.toggle('text-cursor', tool === 'text');
+  container.style.cursor = tool === 'heart'
+    ? 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\'%3E%3Ctext y=\'20\' font-size=\'20\'%3E♥%3C/text%3E%3C/svg%3E") 12 12, crosshair'
+    : (tool === 'pan' ? 'crosshair' : 'default');
+}
+
+function setDrawColor(color, el) {
+  drawColor = color;
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('active', s.dataset.color === color));
+}
+
+// SVG Drawing Events
+(function initDrawing() {
+  const svg = document.getElementById('draw-layer');
+  let tempEl = null;
+  let startX, startY;
+
+  function svgCoords(e) {
+    const rect = svg.getBoundingClientRect();
+    const img = document.getElementById('floor-plan-img');
+    return {
+      x: (e.clientX - rect.left) / zoom,
+      y: (e.clientY - rect.top)  / zoom,
+    };
+  }
+
+  svg.addEventListener('mousedown', e => {
+    if (!['pen','arrow','rect'].includes(drawTool)) return;
+    e.preventDefault();
+    const p = svgCoords(e);
+    startX = p.x; startY = p.y;
+    isDrawing = true;
+
+    if (drawTool === 'pen') {
+      drawPoints = [p];
+      tempEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      tempEl.setAttribute('fill', 'none');
+      tempEl.setAttribute('stroke', drawColor);
+      tempEl.setAttribute('stroke-width', 3 / zoom * zoom); // consistent visual weight
+      tempEl.setAttribute('stroke-width', '4');
+      tempEl.setAttribute('stroke-linecap', 'round');
+      tempEl.setAttribute('stroke-linejoin', 'round');
+      tempEl.setAttribute('d', `M${p.x} ${p.y}`);
+      svg.appendChild(tempEl);
+    } else if (drawTool === 'arrow') {
+      tempEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tempEl.setAttribute('x1', p.x); tempEl.setAttribute('y1', p.y);
+      tempEl.setAttribute('x2', p.x); tempEl.setAttribute('y2', p.y);
+      tempEl.setAttribute('stroke', drawColor);
+      tempEl.setAttribute('stroke-width', '4');
+      tempEl.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(tempEl);
+    } else if (drawTool === 'rect') {
+      tempEl = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      tempEl.setAttribute('x', p.x); tempEl.setAttribute('y', p.y);
+      tempEl.setAttribute('width', 0); tempEl.setAttribute('height', 0);
+      tempEl.setAttribute('fill', drawColor + '20');
+      tempEl.setAttribute('stroke', drawColor);
+      tempEl.setAttribute('stroke-width', '3');
+      tempEl.setAttribute('stroke-dasharray', '8 4');
+      tempEl.setAttribute('rx', '4');
+      svg.appendChild(tempEl);
+    }
+  });
+
+  svg.addEventListener('mousemove', e => {
+    if (!isDrawing || !tempEl) return;
+    const p = svgCoords(e);
+
+    if (drawTool === 'pen') {
+      drawPoints.push(p);
+      let d = `M${drawPoints[0].x} ${drawPoints[0].y}`;
+      for (let i = 1; i < drawPoints.length; i++) d += ` L${drawPoints[i].x} ${drawPoints[i].y}`;
+      tempEl.setAttribute('d', d);
+    } else if (drawTool === 'arrow') {
+      tempEl.setAttribute('x2', p.x);
+      tempEl.setAttribute('y2', p.y);
+    } else if (drawTool === 'rect') {
+      const x = Math.min(startX, p.x), y = Math.min(startY, p.y);
+      const w = Math.abs(p.x - startX), h = Math.abs(p.y - startY);
+      tempEl.setAttribute('x', x); tempEl.setAttribute('y', y);
+      tempEl.setAttribute('width', w); tempEl.setAttribute('height', h);
+    }
+  });
+
+  svg.addEventListener('mouseup', e => {
+    if (!isDrawing || !tempEl) return;
+    isDrawing = false;
+    const p = svgCoords(e);
+
+    if (drawTool === 'pen' && drawPoints.length > 2) {
+      let d = `M${drawPoints[0].x} ${drawPoints[0].y}`;
+      for (let i = 1; i < drawPoints.length; i++) d += ` L${drawPoints[i].x} ${drawPoints[i].y}`;
+      saveMarkup({ type: 'pen', path: d, color: drawColor });
+    } else if (drawTool === 'arrow') {
+      const dx = p.x - startX, dy = p.y - startY;
+      if (Math.sqrt(dx*dx + dy*dy) > 10) {
+        pendingArrow = { x1: startX, y1: startY, x2: p.x, y2: p.y, color: drawColor };
+        document.getElementById('arrow-label-text').value = '';
+        document.getElementById('arrow-modal').classList.add('open');
+        setTimeout(() => document.getElementById('arrow-label-text').focus(), 50);
+      }
+    } else if (drawTool === 'rect') {
+      const w = Math.abs(p.x - startX), h = Math.abs(p.y - startY);
+      if (w > 10 && h > 10) {
+        saveMarkup({
+          type: 'rect',
+          x: Math.min(startX, p.x), y: Math.min(startY, p.y),
+          w, h, color: drawColor,
+        });
+      }
+    }
+
+    if (tempEl) { tempEl.remove(); tempEl = null; }
+    drawPoints = [];
+  });
+
+  svg.addEventListener('mouseleave', () => {
+    if (isDrawing && tempEl) { tempEl.remove(); tempEl = null; }
+    isDrawing = false;
+    drawPoints = [];
+  });
+
+  // Touch support
+  svg.addEventListener('touchstart', e => {
+    if (!['pen','arrow','rect'].includes(drawTool)) return;
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    svg.dispatchEvent(new MouseEvent('mousedown', { clientX: touch.clientX, clientY: touch.clientY }));
+  }, { passive: false });
+  svg.addEventListener('touchmove', e => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    svg.dispatchEvent(new MouseEvent('mousemove', { clientX: touch.clientX, clientY: touch.clientY }));
+  }, { passive: false });
+  svg.addEventListener('touchend', e => {
+    if (!isDrawing) return;
+    const touch = e.changedTouches[0];
+    svg.dispatchEvent(new MouseEvent('mouseup', { clientX: touch.clientX, clientY: touch.clientY }));
+  });
+})();
+
+// Arrow & Text modals
+function cancelArrow() {
+  pendingArrow = null;
+  document.getElementById('arrow-modal').classList.remove('open');
+}
+
+function saveArrow() {
+  if (!pendingArrow) return;
+  const label = document.getElementById('arrow-label-text').value.trim() || '';
+  saveMarkup({ type: 'arrow', ...pendingArrow, label });
+  pendingArrow = null;
+  document.getElementById('arrow-modal').classList.remove('open');
+}
+
+function cancelTextLabel() {
+  pendingTextPos = null;
+  document.getElementById('text-modal').classList.remove('open');
+}
+
+function saveTextLabel() {
+  const text = document.getElementById('text-label-text').value.trim();
+  if (!text || !pendingTextPos) { document.getElementById('text-label-text').focus(); return; }
+  saveMarkup({ type: 'text', x: pendingTextPos.x, y: pendingTextPos.y, text, color: drawColor });
+  pendingTextPos = null;
+  document.getElementById('text-modal').classList.remove('open');
+}
+
+// Save markup to Firebase
+async function saveMarkup(data) {
+  setSyncStatus('syncing');
+  try {
+    await db.collection('markups').add({
+      ...data,
+      versionKey: versionKey(),
+      createdBy: currentUser,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    setSyncStatus('synced');
+  } catch(err) { console.error(err); setSyncStatus('error'); }
+}
+
+async function deleteMarkup(id) {
+  await db.collection('markups').doc(id).delete();
+}
+
+function undoLastDrawing() {
+  const mine = markups.filter(m => m.createdBy === currentUser);
+  if (mine.length === 0) return;
+  deleteMarkup(mine[mine.length - 1].id);
+}
+
+// Render all markups onto SVG
+function renderDrawings() {
+  const svg = document.getElementById('draw-layer');
+  // Remove rendered markups (keep temp drawings)
+  svg.querySelectorAll('.markup-rendered').forEach(el => el.remove());
+  const img = document.getElementById('floor-plan-img');
+  if (!img.naturalWidth) return;
+
+  markups.forEach(m => {
+    if (m.type === 'pen') {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('class', 'markup-rendered');
+      path.setAttribute('d', m.path);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', m.color);
+      path.setAttribute('stroke-width', '4');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('stroke-linejoin', 'round');
+      path.setAttribute('opacity', '0.8');
+      svg.appendChild(path);
+    } else if (m.type === 'arrow') {
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('class', 'markup-rendered');
+
+      // Line
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', m.x1); line.setAttribute('y1', m.y1);
+      line.setAttribute('x2', m.x2); line.setAttribute('y2', m.y2);
+      line.setAttribute('stroke', m.color);
+      line.setAttribute('stroke-width', '4');
+      line.setAttribute('stroke-linecap', 'round');
+      g.appendChild(line);
+
+      // Arrowhead
+      const angle = Math.atan2(m.y2 - m.y1, m.x2 - m.x1);
+      const headLen = 16;
+      const a1x = m.x2 - headLen * Math.cos(angle - Math.PI/6);
+      const a1y = m.y2 - headLen * Math.sin(angle - Math.PI/6);
+      const a2x = m.x2 - headLen * Math.cos(angle + Math.PI/6);
+      const a2y = m.y2 - headLen * Math.sin(angle + Math.PI/6);
+      const head = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      head.setAttribute('points', `${m.x2},${m.y2} ${a1x},${a1y} ${a2x},${a2y}`);
+      head.setAttribute('fill', m.color);
+      g.appendChild(head);
+
+      // Label
+      if (m.label) {
+        const mx = (m.x1 + m.x2) / 2;
+        const my = (m.y1 + m.y2) / 2 - 10;
+        // Background
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const textLen = m.label.length * 8 + 16;
+        bg.setAttribute('x', mx - textLen/2); bg.setAttribute('y', my - 12);
+        bg.setAttribute('width', textLen); bg.setAttribute('height', 22);
+        bg.setAttribute('rx', 4); bg.setAttribute('fill', 'white');
+        bg.setAttribute('stroke', m.color); bg.setAttribute('stroke-width', '1.5');
+        bg.setAttribute('opacity', '0.95');
+        g.appendChild(bg);
+
+        const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', mx); txt.setAttribute('y', my + 4);
+        txt.setAttribute('text-anchor', 'middle');
+        txt.setAttribute('font-size', '13');
+        txt.setAttribute('font-weight', '700');
+        txt.setAttribute('font-family', 'Segoe UI, Arial, sans-serif');
+        txt.setAttribute('fill', m.color);
+        txt.textContent = m.label;
+        g.appendChild(txt);
+      }
+
+      svg.appendChild(g);
+    } else if (m.type === 'rect') {
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('class', 'markup-rendered');
+      rect.setAttribute('x', m.x); rect.setAttribute('y', m.y);
+      rect.setAttribute('width', m.w); rect.setAttribute('height', m.h);
+      rect.setAttribute('fill', m.color + '18');
+      rect.setAttribute('stroke', m.color);
+      rect.setAttribute('stroke-width', '3');
+      rect.setAttribute('stroke-dasharray', '8 4');
+      rect.setAttribute('rx', '4');
+      svg.appendChild(rect);
+    } else if (m.type === 'text') {
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('class', 'markup-rendered');
+      const bgW = m.text.length * 8.5 + 16;
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('x', m.x * img.naturalWidth - bgW/2);
+      bg.setAttribute('y', m.y * img.naturalHeight - 14);
+      bg.setAttribute('width', bgW); bg.setAttribute('height', 24);
+      bg.setAttribute('rx', 4); bg.setAttribute('fill', m.color);
+      bg.setAttribute('opacity', '0.9');
+      g.appendChild(bg);
+
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', m.x * img.naturalWidth);
+      txt.setAttribute('y', m.y * img.naturalHeight + 4);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('font-size', '13');
+      txt.setAttribute('font-weight', '700');
+      txt.setAttribute('font-family', 'Segoe UI, Arial, sans-serif');
+      txt.setAttribute('fill', 'white');
+      txt.textContent = m.text;
+      g.appendChild(txt);
+      svg.appendChild(g);
+    }
+  });
+}
+
+// Markups sidebar list
+function renderMarkupsList() {
+  const list = document.getElementById('markups-list');
+  if (markups.length === 0) {
+    list.innerHTML = '<div class="empty-state">No markups yet.<br>Use the toolbar above the plan to draw.</div>';
+    return;
+  }
+  const icons = { pen: '✏️', arrow: '↗️', rect: '⬜', text: '🏷️' };
+  const labels = { pen: 'Freehand', arrow: 'Extension Arrow', rect: 'Highlight Area', text: 'Text Label' };
+  const bgColors = { pen: '#fdeef2', arrow: '#e8f2fc', rect: '#fdf0e0', text: '#f5e6f3' };
+
+  list.innerHTML = markups.map(m => {
+    const desc = m.type === 'arrow' ? (m.label || 'Arrow') : (m.type === 'text' ? m.text : labels[m.type]);
+    const canDel = m.createdBy === currentUser;
+    return `<div class="markup-card">
+      <div class="markup-icon" style="background:${bgColors[m.type]}">${icons[m.type]}</div>
+      <div class="markup-card-body">
+        <div class="markup-label">${esc(desc)}</div>
+        <div class="markup-meta">${esc(m.createdBy)} · <span style="color:${m.color}">●</span></div>
+      </div>
+      ${canDel ? `<button class="markup-del" onclick="deleteMarkup('${m.id}')" title="Delete">×</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// Notes
+// ══════════════════════════════════════════
 function openNoteModal(isEdit) {
   document.getElementById('note-modal-title').textContent = isEdit ? 'Edit Note' : 'Add Review Note';
   document.getElementById('note-save-btn').textContent    = isEdit ? 'Save Changes' : 'Add Note';
@@ -855,7 +1238,7 @@ function getRoomValue() {
 }
 
 async function saveNote() {
-  const text     = document.getElementById('note-text').value.trim();
+  const text = document.getElementById('note-text').value.trim();
   if (!text) { document.getElementById('note-text').focus(); return; }
   const room     = getRoomValue();
   const category = document.getElementById('note-category').value;
@@ -873,14 +1256,14 @@ async function saveNote() {
       await db.collection('notes').add({
         text, room, category, priority,
         x: pendingPin.x, y: pendingPin.y,
-        versionId: currentVersionId,
+        versionKey: versionKey(),
         createdBy: currentUser || 'Unknown',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
     setSyncStatus('synced');
     closeNoteModal();
-  } catch(err) { console.error(err); setSyncStatus('error'); alert('Save failed — check connection.'); }
+  } catch(err) { console.error(err); setSyncStatus('error'); alert('Save failed.'); }
 }
 
 function editNote(id) {
@@ -937,7 +1320,7 @@ function renderPins() {
   notes.forEach(note => {
     const pin = document.createElement('div');
     pin.className = `pin-marker cat-${note.category}${note.id === highlightedId ? ' highlighted' : ''}`;
-    pin.style.left  = (note.x * img.naturalWidth  * zoom) + 'px';
+    pin.style.left  = (note.x * img.naturalWidth * zoom) + 'px';
     pin.style.top   = (note.y * img.naturalHeight * zoom) + 'px';
     pin.title       = `${note.num}. ${note.text}`;
     pin.innerHTML   = `<span class="pin-number">${note.num}</span>`;
@@ -947,20 +1330,19 @@ function renderPins() {
 }
 
 // ══════════════════════════════════════════
-// Sidebar
+// Sidebar: Notes
 // ══════════════════════════════════════════
 function renderSidebar(incomingIds = new Set()) {
   const list = document.getElementById('notes-list');
   const filtered = notes.filter(n => {
-    if (filterCat  !== 'all' && n.category !== filterCat)  return false;
-    if (filterPri  !== 'all' && n.priority !== filterPri)  return false;
-    if (filterRoom !== ''    && n.room     !== filterRoom)  return false;
+    if (filterCat !== 'all' && n.category !== filterCat) return false;
+    if (filterPri !== 'all' && n.priority !== filterPri) return false;
+    if (filterRoom !== '' && n.room !== filterRoom) return false;
     return true;
   });
   const anyActive = filterCat !== 'all' || filterPri !== 'all' || filterRoom !== '';
   const cc = document.getElementById('clear-filters');
   if (cc) cc.classList.toggle('visible', anyActive);
-  document.getElementById('note-count').textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
   updateFabCount();
 
   const statsBar = document.getElementById('stats-bar');
@@ -974,9 +1356,9 @@ function renderSidebar(incomingIds = new Set()) {
   }
 
   if (filtered.length === 0) {
-    list.innerHTML = `<div class="empty-state">📌<br>${
+    list.innerHTML = `<div class="empty-state">${
       notes.length === 0
-        ? (currentVersionId ? 'Click anywhere on the plan<br>to add the first note.' : 'Select a plan version above.')
+        ? 'Click anywhere on the plan<br>to add a note.'
         : 'No notes match this filter.'
     }</div>`;
     return;
@@ -984,7 +1366,7 @@ function renderSidebar(incomingIds = new Set()) {
 
   list.innerHTML = filtered.map(note => {
     const createdTs  = note.createdAt ? fmtTime(note.createdAt.toDate ? note.createdAt.toDate() : new Date(note.createdAt)) : '';
-    const editedLine = note.editedBy ? `<span class="edited"> · edited by ${esc(note.editedBy)}</span>` : '';
+    const editedLine = note.editedBy ? `<span style="font-style:italic"> · edited by ${esc(note.editedBy)}</span>` : '';
     const isNew      = incomingIds.has(note.id);
     const hearts     = note.hearts || [];
     return `
@@ -1000,11 +1382,11 @@ function renderSidebar(incomingIds = new Set()) {
           </div>
         </div>
         <div class="card-actions">
-          <button class="card-btn heart ${hearts.includes(currentUser) ? 'loved' : ''}" onclick="event.stopPropagation();toggleHeart('${note.id}')" title="${hearts.includes(currentUser) ? 'Remove heart' : 'Love this'}">
+          <button class="card-btn heart ${hearts.includes(currentUser) ? 'loved' : ''}" onclick="event.stopPropagation();toggleHeart('${note.id}')">
             ♥${hearts.length > 0 ? `<span class="heart-count">${hearts.length}</span>` : ''}
           </button>
-          <button class="card-btn edit" onclick="event.stopPropagation();editNote('${note.id}')" title="Edit">✏</button>
-          <button class="card-btn del"  onclick="event.stopPropagation();deleteNote('${note.id}')" title="Delete">×</button>
+          <button class="card-btn edit" onclick="event.stopPropagation();editNote('${note.id}')">✏</button>
+          <button class="card-btn del"  onclick="event.stopPropagation();deleteNote('${note.id}')">×</button>
         </div>
       </div>
       <div class="note-card-footer">
@@ -1039,19 +1421,13 @@ function setCatFilter(f, el) {
   el.classList.add('active');
   renderSidebar();
 }
-
 function setPriFilter(f, el) {
   filterPri = f;
   el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   renderSidebar();
 }
-
-function setRoomFilter(val) {
-  filterRoom = val;
-  renderSidebar();
-}
-
+function setRoomFilter(val) { filterRoom = val; renderSidebar(); }
 function clearAllFilters() {
   filterCat = 'all'; filterPri = 'all'; filterRoom = '';
   document.getElementById('room-filter').value = '';
@@ -1063,36 +1439,65 @@ function clearAllFilters() {
 }
 
 // ══════════════════════════════════════════
-// Share Export (self-contained HTML)
+// Sidebar: Changes
+// ══════════════════════════════════════════
+function renderChanges() {
+  const el = document.getElementById('changes-content');
+  el.innerHTML = `
+    <div class="change-summary-header">
+      V1 → V2 Changes
+      <span class="sqft-badge">2,420 → 2,500 sq ft</span>
+    </div>
+    ${CHANGES.map(c => `
+      <div class="change-card">
+        <h4><span class="change-badge ${c.badge}">${c.badge}</span> ${esc(c.title)}</h4>
+        <p>${esc(c.text)}</p>
+      </div>
+    `).join('')}
+    <div style="margin-top:12px;padding:10px;background:#fff8e1;border-radius:6px;border-left:3px solid #f0a020;font-size:11px;color:#856404;line-height:1.5">
+      <strong>Tip:</strong> Switch between V1 and V2 using the toggle at the top to compare each sheet side by side. Use the markup tools to draw extension arrows showing where you'd like rooms expanded.
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// Sidebar Tab Switching
+// ══════════════════════════════════════════
+function switchSidebarTab(panel) {
+  document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.toggle('active', t.dataset.panel === panel));
+  document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${panel}`));
+}
+
+// ══════════════════════════════════════════
+// Share / Export / Print
 // ══════════════════════════════════════════
 function exportShareable() {
   const img = document.getElementById('floor-plan-img');
   if (!img.src || !img.naturalWidth) { alert('Load a floor plan first.'); return; }
-  if (notes.length === 0) { alert('Add some notes before sharing.'); return; }
+  if (notes.length === 0 && markups.length === 0) { alert('Add some notes or markups before sharing.'); return; }
 
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
   try { canvas.getContext('2d').drawImage(img, 0, 0); } catch(e) { alert('Could not embed image.'); return; }
   const dataUrl = canvas.toDataURL('image/png');
 
-  const version  = versions.find(v => v.id === currentVersionId);
-  const vName    = version ? version.name : 'Floor Plan';
-  const dateStr  = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+  const vLabel = VERSIONS[currentVersion].label;
+  const sLabel = SHEETS[currentSheet].label;
+  const dateStr = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
 
   const pins = notes.map(n =>
     `<div style="position:absolute;left:${(n.x*100).toFixed(3)}%;top:${(n.y*100).toFixed(3)}%;width:26px;height:26px;border-radius:50% 50% 50% 0;background:${CAT_COLORS[n.category]};transform:translate(-50%,-100%) rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.35);z-index:10" title="${esc(n.text)}"><span style="transform:rotate(45deg);font-size:10px;font-weight:700;color:white">${n.num}</span></div>`
   ).join('');
 
   const cards = notes.map(n => {
-    const tagBg    = {question:'#e8f2fc',change:'#fdf0e0',confirmed:'#e6f5ec',hold:'#f5e6f3'}[n.category];
-    const createdTs = n.createdAt ? fmtTime(n.createdAt.toDate ? n.createdAt.toDate() : new Date(n.createdAt)) : '';
+    const tagBg = {question:'#e8f2fc',change:'#fdf0e0',confirmed:'#e6f5ec',hold:'#f5e6f3'}[n.category];
     return `<div style="background:#faf8f6;border:1.5px solid #e0d8d0;border-radius:6px;padding:10px 12px;margin-bottom:6px">
       <div style="display:flex;gap:8px;align-items:flex-start">
         <div style="width:22px;height:22px;min-width:22px;border-radius:50%;background:${CAT_COLORS[n.category]};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white">${n.num}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:12px;line-height:1.5">${esc(n.text)}</div>
           ${n.room?`<div style="font-size:10px;color:#888;margin-top:2px">${esc(n.room)}</div>`:''}
-          <div style="font-size:10px;color:#bbb;margin-top:3px"><b style="color:#999">${esc(n.createdBy||'?')}</b>${createdTs?` · ${createdTs}`:''}${n.editedBy?` <i>· edited by ${esc(n.editedBy)}</i>`:''}</div>
+          <div style="font-size:10px;color:#bbb;margin-top:3px"><b style="color:#999">${esc(n.createdBy||'?')}</b></div>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-top:6px">
@@ -1102,7 +1507,7 @@ function exportShareable() {
     </div>`;
   }).join('');
 
-  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Floor Plan Review — ${esc(vName)}</title>
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Floor Plan Review — ${esc(vLabel)} — ${esc(sLabel)}</title>
 <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f1ee;color:#2c2c2c;height:100vh;display:flex;flex-direction:column}
 header{background:#3D2C2B;color:#EAE5E1;padding:12px 20px;flex-shrink:0}
 .workspace{display:flex;flex:1;overflow:hidden}
@@ -1116,12 +1521,12 @@ header{background:#3D2C2B;color:#EAE5E1;padding:12px 20px;flex-shrink:0}
 </style></head><body>
 <header>
   <div style="font-size:15px;font-weight:600">Bain / Denu Residence — Floor Plan Review</div>
-  <div style="font-size:11px;opacity:.6;margin-top:2px">${esc(vName)} &middot; Shared ${dateStr} &middot; ${notes.length} notes</div>
+  <div style="font-size:11px;opacity:.6;margin-top:2px">${esc(vLabel)} · ${esc(sLabel)} · Shared ${dateStr} · ${notes.length} notes</div>
 </header>
 <div class="workspace">
   <div class="sidebar">
     <h2>Review Notes (${notes.length})</h2>
-    <div class="readonly-tag">Read-only snapshot. Click pins on the plan to see notes.</div>
+    <div class="readonly-tag">Read-only snapshot</div>
     <div class="notes">${cards}</div>
   </div>
   <div class="canvas"><div class="img-wrap"><img src="${dataUrl}"><div style="position:absolute;inset:0;pointer-events:none">${pins}</div></div></div>
@@ -1129,31 +1534,29 @@ header{background:#3D2C2B;color:#EAE5E1;padding:12px 20px;flex-shrink:0}
 
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([html], {type:'text/html'}));
-  a.download = `Bain-Denu-Review-${new Date().toISOString().slice(0,10)}.html`;
+  a.download = `Bain-Denu-Review-${currentVersion}-sheet${currentSheet}-${new Date().toISOString().slice(0,10)}.html`;
   a.click();
 }
 
-// ══════════════════════════════════════════
-// Export JSON / Print
-// ══════════════════════════════════════════
 function exportNotes() {
   if (notes.length === 0) { alert('No notes to export.'); return; }
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify({ project:'Bain/Denu', exported: new Date().toISOString(), versionId: currentVersionId, notes }, null, 2)], {type:'application/json'}));
-  a.download = `notes-${new Date().toISOString().slice(0,10)}.json`;
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ project:'Bain/Denu', version: currentVersion, sheet: currentSheet, exported: new Date().toISOString(), notes, markups }, null, 2)], {type:'application/json'}));
+  a.download = `notes-${currentVersion}-sheet${currentSheet}-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
 }
 
 function printReport() {
   if (notes.length === 0) { alert('No notes to print.'); return; }
-  const version = versions.find(v => v.id === currentVersionId);
+  const vLabel = VERSIONS[currentVersion].label;
+  const sLabel = SHEETS[currentSheet].label;
   const rows = notes.map(n =>
     `<tr><td style="text-align:center">${n.num}</td><td>${esc(n.room||'—')}</td><td>${esc(n.text)}</td><td>${esc(n.createdBy||'?')}</td><td>${CAT_LABELS[n.category]}</td><td style="text-transform:capitalize">${n.priority}</td></tr>`
   ).join('');
   const w = window.open('');
   w.document.write(`<!DOCTYPE html><html><head><title>Floor Plan Review</title><style>body{font-family:Arial,sans-serif;padding:40px}h1{font-size:18px;color:#3D2C2B;margin-bottom:4px}.sub{font-size:12px;color:#888;margin-bottom:20px}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#3D2C2B;color:white;padding:7px 10px;text-align:left}td{padding:7px 10px;border-bottom:1px solid #e0d8d0;vertical-align:top}tr:nth-child(even)td{background:#faf8f6}</style></head><body>
   <h1>Bain / Denu Residence — Floor Plan Review</h1>
-  <div class="sub">${version ? esc(version.name) : ''} &middot; Printed ${new Date().toLocaleDateString()}</div>
+  <div class="sub">${esc(vLabel)} · ${esc(sLabel)} · Printed ${new Date().toLocaleDateString()}</div>
   <table><thead><tr><th>#</th><th>Area</th><th>Note</th><th>By</th><th>Category</th><th>Priority</th></tr></thead><tbody>${rows}</tbody></table>
   </body></html>`);
   w.document.close(); w.print();
@@ -1165,7 +1568,7 @@ function printReport() {
 function setSyncStatus(s) {
   const d = document.getElementById('sync-dot');
   d.className = 'sync-dot ' + s;
-  d.title = { synced:'Live — all changes saved', syncing:'Syncing...', error:'Sync error — check connection' }[s];
+  d.title = { synced:'Live — all changes saved', syncing:'Syncing...', error:'Sync error' }[s];
 }
 
 function fmtTime(date) {
@@ -1185,18 +1588,16 @@ function esc(s) {
 // Mobile sidebar
 // ══════════════════════════════════════════
 function toggleMobileSidebar() {
-  const sidebar = document.querySelector('.sidebar');
+  const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebar-backdrop');
   const isOpen = sidebar.classList.contains('open');
   sidebar.classList.toggle('open', !isOpen);
   backdrop.classList.toggle('open', !isOpen);
 }
-
 function closeMobileSidebar() {
-  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-backdrop').classList.remove('open');
 }
-
 function updateFabCount() {
   const el = document.getElementById('fab-count');
   if (el) el.textContent = notes.length;
@@ -1208,29 +1609,23 @@ function updateFabCount() {
 (function() {
   let lastDist = null;
   let lastZoom = 1;
-
   function dist(touches) {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx*dx + dy*dy);
   }
-
-  document.getElementById('image-container').addEventListener('touchstart', e => {
+  const ic = document.getElementById('image-container');
+  ic.addEventListener('touchstart', e => {
     if (e.touches.length === 2) { lastDist = dist(e.touches); lastZoom = zoom; }
   }, { passive: true });
-
-  document.getElementById('image-container').addEventListener('touchmove', e => {
+  ic.addEventListener('touchmove', e => {
     if (e.touches.length === 2) {
       e.preventDefault();
       const d = dist(e.touches);
-      if (lastDist) {
-        zoom = Math.max(0.2, Math.min(3.0, lastZoom * (d / lastDist)));
-        applyZoom();
-      }
+      if (lastDist) { zoom = Math.max(0.2, Math.min(3.0, lastZoom * (d / lastDist))); applyZoom(); }
     }
   }, { passive: false });
-
-  document.getElementById('image-container').addEventListener('touchend', e => {
+  ic.addEventListener('touchend', e => {
     if (e.touches.length < 2) lastDist = null;
   }, { passive: true });
 })();
@@ -1239,15 +1634,32 @@ function updateFabCount() {
 // Keyboard shortcuts
 // ══════════════════════════════════════════
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeNoteModal(); closeVersionModal(); }
+  if (e.key === 'Escape') {
+    closeNoteModal();
+    cancelArrow();
+    cancelTextLabel();
+  }
   if (e.key === 'Enter' && e.ctrlKey && document.getElementById('note-modal').classList.contains('open')) saveNote();
+  if (e.key === 'Enter' && e.ctrlKey && document.getElementById('arrow-modal').classList.contains('open')) saveArrow();
+  if (e.key === 'Enter' && e.ctrlKey && document.getElementById('text-modal').classList.contains('open')) saveTextLabel();
+  // Tool shortcuts
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'v' || e.key === '1') setDrawTool('pan');
+  if (e.key === 'p' || e.key === '2') setDrawTool('pen');
+  if (e.key === 'a' || e.key === '3') setDrawTool('arrow');
+  if (e.key === 'r' || e.key === '4') setDrawTool('rect');
+  if (e.key === 't' || e.key === '5') setDrawTool('text');
+  if (e.key === 'h') setDrawTool('heart');
+  if (e.key === 'z' && (e.ctrlKey || e.metaKey)) undoLastDrawing();
 });
 
 // ══════════════════════════════════════════
 // Init
 // ══════════════════════════════════════════
 initUser();
-loadVersions();
+loadCurrentImage();
+subscribeAll();
+renderChanges();
 </script>
 </body>
 </html>
