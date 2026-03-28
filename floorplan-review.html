@@ -144,7 +144,8 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
 .markup-del:hover { color: #CD1543; }
 
 /* ── Canvas ── */
-.canvas-area { flex: 1; overflow: auto; position: relative; background: #e0dbd5; }
+.canvas-area { flex: 1; overflow: auto; position: relative; background: #e0dbd5; cursor: grab; }
+.canvas-area.panning { cursor: grabbing; user-select: none; }
 .load-prompt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #999; font-size: 14px; }
 #image-container { position: relative; display: inline-block; user-select: none; }
 #floor-plan-img { display: block; max-width: none; }
@@ -837,7 +838,40 @@ function subscribeToMarkups() {
 // ══════════════════════════════════════════
 // Canvas Click Handler
 // ══════════════════════════════════════════
+// ── Drag-to-pan on canvas ──
+let panState = null;
+const canvasEl = document.getElementById('canvas-area');
+
+canvasEl.addEventListener('mousedown', e => {
+  // Only pan in pan/heart mode and when clicking the canvas background or image
+  if (!['pan','heart','text'].includes(drawTool)) return;
+  if (e.target.closest('.pin-marker') || e.target.closest('.heart-marker')) return;
+  panState = { startX: e.clientX, startY: e.clientY, scrollX: canvasEl.scrollLeft, scrollY: canvasEl.scrollTop, moved: false };
+  canvasEl.classList.add('panning');
+});
+
+window.addEventListener('mousemove', e => {
+  if (!panState) return;
+  const dx = e.clientX - panState.startX;
+  const dy = e.clientY - panState.startY;
+  if (Math.abs(dx) > 4 || Math.abs(dy) > 4) panState.moved = true;
+  if (panState.moved) {
+    canvasEl.scrollLeft = panState.scrollX - dx;
+    canvasEl.scrollTop  = panState.scrollY - dy;
+  }
+});
+
+window.addEventListener('mouseup', e => {
+  if (!panState) return;
+  const wasDrag = panState.moved;
+  canvasEl.classList.remove('panning');
+  panState = null;
+  if (wasDrag) return; // was a drag, don't place anything
+});
+
 function handleCanvasClick(e) {
+  // If we just finished a drag, skip
+  if (panState && panState.moved) return;
   if (!currentUser) { openUserModal(); return; }
   if (e.target.closest('.pin-marker') || e.target.closest('.heart-marker')) return;
 
@@ -877,7 +911,8 @@ function setDrawTool(tool) {
   svg.classList.toggle('text-cursor', tool === 'text');
   container.style.cursor = tool === 'heart'
     ? 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\'%3E%3Ctext y=\'20\' font-size=\'20\'%3E♥%3C/text%3E%3C/svg%3E") 12 12, crosshair'
-    : (tool === 'pan' ? 'crosshair' : 'default');
+    : (tool === 'pan' ? 'grab' : 'default');
+  canvasEl.style.cursor = ['pen','arrow','rect'].includes(tool) ? 'default' : (tool === 'pan' ? 'grab' : 'default');
 }
 
 function setDrawColor(color, el) {
@@ -1629,6 +1664,15 @@ function updateFabCount() {
     if (e.touches.length < 2) lastDist = null;
   }, { passive: true });
 })();
+
+// ── Scroll-wheel zoom on canvas ──
+canvasEl.addEventListener('wheel', e => {
+  if (!e.ctrlKey && !e.metaKey) return; // only zoom with Ctrl+scroll
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.1 : 0.1;
+  zoom = Math.max(0.2, Math.min(3.0, zoom + delta));
+  applyZoom();
+}, { passive: false });
 
 // ══════════════════════════════════════════
 // Keyboard shortcuts
