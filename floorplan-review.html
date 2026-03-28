@@ -769,10 +769,14 @@ function subscribeToNotes() {
 
   notesListener = db.collection('notes')
     .where('versionKey', '==', versionKey())
-    .orderBy('createdAt', 'asc')
     .onSnapshot(snap => {
       const incoming = new Set();
-      notes = snap.docs.map((doc, i) => {
+      const docs = snap.docs.slice().sort((a,b) => {
+        const ta = a.data().createdAt?.seconds || 0;
+        const tb = b.data().createdAt?.seconds || 0;
+        return ta - tb;
+      });
+      notes = docs.map((doc, i) => {
         const n = { id: doc.id, num: i + 1, ...doc.data() };
         if (!knownNoteIds.has(doc.id)) incoming.add(doc.id);
         return n;
@@ -834,9 +838,12 @@ function subscribeToMarkups() {
   markups = [];
   markupsListener = db.collection('markups')
     .where('versionKey', '==', versionKey())
-    .orderBy('createdAt', 'asc')
     .onSnapshot(snap => {
-      markups = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      markups = snap.docs.slice().sort((a,b) => {
+        const ta = a.data().createdAt?.seconds || 0;
+        const tb = b.data().createdAt?.seconds || 0;
+        return ta - tb;
+      }).map(d => ({ id: d.id, ...d.data() }));
       renderDrawings();
       renderMarkupsList();
     }, err => console.error(err));
@@ -1757,14 +1764,16 @@ async function migrateOldNotes() {
 // Seed V2 change notes onto floor plan
 // ══════════════════════════════════════════
 async function seedV2ChangeNotes() {
-  const seeded = localStorage.getItem('brio-seeded-v2-changes');
+  const seeded = localStorage.getItem('brio-seeded-v2b');
   if (seeded) return;
 
   try {
     // Check if any notes already exist on v2_sheet6
-    const existing = await db.collection('notes').where('versionKey', '==', 'v2_sheet6').limit(1).get();
-    if (!existing.empty) {
-      localStorage.setItem('brio-seeded-v2-changes', 'true');
+    // Check if change notes already exist (look for the Claude-authored ones)
+    const existing = await db.collection('notes').where('versionKey', '==', 'v2_sheet6').get();
+    const hasChangeNotes = existing.docs.some(d => d.data().createdBy === 'Claude');
+    if (hasChangeNotes) {
+      localStorage.setItem('brio-seeded-v2b', 'true');
       return;
     }
 
@@ -1798,7 +1807,7 @@ async function seedV2ChangeNotes() {
     });
 
     await batch.commit();
-    localStorage.setItem('brio-seeded-v2-changes', 'true');
+    localStorage.setItem('brio-seeded-v2b', 'true');
     console.log('Seeded V2 change notes');
     // If we're currently viewing v2_sheet6, re-subscribe
     if (currentVersion === 'v2' && currentSheet === 6) subscribeAll();
