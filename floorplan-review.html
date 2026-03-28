@@ -591,16 +591,15 @@ const VERSIONS = {
 };
 
 const CHANGES = [
-  { title: 'Living Area: 2,420 → 2,500 sq ft', badge: 'major', text: 'All 80 sq ft added to the primary suite. No other rooms changed dimensions significantly.' },
-  { title: 'Primary Bedroom Expanded', badge: 'major', text: 'Rear (south) wall pushed outward, making the room noticeably deeper. Estimated +30–40 sq ft. This is the single largest change in V2.' },
-  { title: 'Primary Bathroom Enlarged', badge: 'major', text: 'Shower/tub area grew — the pink-shaded zone in V2 is distinctly larger than V1. Estimated +20–25 sq ft.' },
-  { title: 'Primary Walk-In Closet Deeper', badge: 'modified', text: 'Walk-in closet extended to match the rear wall push-out. Estimated +15–20 sq ft.' },
-  { title: 'Secondary Bedrooms Unchanged', badge: 'modified', text: 'Bedrooms 2 and 3 appear dimensionally identical between V1 and V2. Hallway may have shifted slightly.' },
+  { title: 'Living Area: 2,420 → 2,500 sq ft', badge: 'major', text: 'Total gain of +80 sq ft distributed across the bedroom wing — secondary bedrooms widened and primary suite reconfigured.' },
+  { title: 'Bedrooms 2 & 3 Widened', badge: 'major', text: 'Both bedrooms grew from 11\' × 11\'7" to 13\' × 11\'7" — each gained +23 sq ft (+46 sq ft total). This is the single largest change in V2.' },
+  { title: 'Primary Walk-In Closet Reshaped', badge: 'modified', text: 'Closet changed from 11\'5" × 6\'8" (76 sq ft) to 6\'6" × 10\'9" (70 sq ft). Different proportions — narrower but deeper. Net -6 sq ft.' },
+  { title: 'Primary Bedroom Expanded', badge: 'major', text: 'Primary bedroom grew from 13\'×13\'6" to 14\'10"×13\' (+17 sq ft). Wider but slightly less deep. Remaining ~23 sq ft gained in the primary bath area — shower/tub zone (pink) is visibly larger in V2.' },
+  { title: 'Front Elevation Wider at Bedroom Wing', badge: 'modified', text: 'Front facade reads wider on the bedroom wing side, consistent with the 2\' expansion on bedrooms 2 & 3.' },
+  { title: 'Rear Elevation Updated', badge: 'modified', text: 'Primary suite section extends further back. Subtle roofline change visible on the bedroom wing end.' },
   { title: 'Kitchen / Great Room / Dining Unchanged', badge: 'modified', text: 'The open-concept living area, kitchen island position, pantry, and mudroom are all consistent between versions.' },
-  { title: 'Front Elevation Wider at Bedroom Wing', badge: 'modified', text: 'Front facade reads slightly wider on the left (bedroom wing) side, consistent with the rear wall extension on the primary suite.' },
-  { title: 'Rear Elevation Updated', badge: 'modified', text: 'Primary suite section extends slightly further back. Subtle roofline change visible on the bedroom wing end.' },
-  { title: 'Foundation Enlarged at Bedroom Wing', badge: 'modified', text: 'Foundation footprint under the primary suite extends further in V2. Stairway position unchanged. Lower level design still TBD.' },
-  { title: 'Roof Plan Modified', badge: 'modified', text: 'Hatched/highlighted region in V2 roof plan covers the expanded primary suite footprint — clearest structural evidence of the change.' },
+  { title: 'Foundation Enlarged at Bedroom Wing', badge: 'modified', text: 'Foundation footprint under the bedroom wing extends further in V2. Stairway position unchanged. Lower level design still TBD.' },
+  { title: 'Roof Plan Modified', badge: 'modified', text: 'Hatched/highlighted region in V2 roof plan covers the expanded bedroom wing — clearest structural evidence of the dimensional change.' },
 ];
 
 // ══════════════════════════════════════════
@@ -1508,16 +1507,19 @@ function renderChanges() {
 
     <div style="background:#fdeef2;border:1.5px solid #CD1543;border-radius:8px;padding:12px;margin-bottom:12px">
       <div style="font-size:22px;font-weight:800;color:#CD1543;margin-bottom:2px">2,420 → 2,500 sq ft</div>
-      <div style="font-size:11px;color:#666">All 80 sq ft concentrated in the <strong>primary suite</strong>. No other rooms changed.</div>
+      <div style="font-size:11px;color:#666">+80 sq ft across the <strong>bedroom wing</strong> — secondary bedrooms widened, primary suite expanded, closet reshaped.</div>
     </div>
 
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">Where the space was added</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">Room-by-room breakdown</div>
 
     <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:14px">
-      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600">Primary Bedroom</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+30–40 sq ft</td></tr>
-      <tr><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600">Primary Bathroom</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+20–25 sq ft</td></tr>
-      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600">Primary Walk-In Closet</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+15–20 sq ft</td></tr>
-      <tr><td style="padding:6px 8px;border-bottom:1px solid #3D2C2B;font-weight:700">Total</td><td style="padding:6px 8px;border-bottom:1px solid #3D2C2B;text-align:right;color:#CD1543;font-weight:800">+80 sq ft</td></tr>
+      <tr style="background:#f4f1ee"><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888" colspan="3">ROOM</td><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888;text-align:right">V1</td><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888;text-align:right">V2</td><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888;text-align:right">+/-</td></tr>
+      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600" colspan="3">Bedroom #2</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#888">11'×11'7"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right">13'×11'7"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+23</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600" colspan="3">Bedroom #3</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#888">11'×11'7"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right">13'×11'7"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+23</td></tr>
+      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600" colspan="3">Primary W.I.C.</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#888">11'5"×6'8"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right">6'6"×10'9"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#b55a00;font-weight:700">-6</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600" colspan="3">Primary Bedroom</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#888">13'×13'6"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right">14'10"×13'</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+17</td></tr>
+      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600" colspan="3">Primary Bath + other</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#888">—</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right">expanded</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">~+23</td></tr>
+      <tr style="background:#f4f1ee"><td style="padding:6px 8px;border-bottom:2px solid #3D2C2B;font-weight:800" colspan="3">Total</td><td style="padding:6px 8px;border-bottom:2px solid #3D2C2B" colspan="2"></td><td style="padding:6px 8px;border-bottom:2px solid #3D2C2B;text-align:right;color:#CD1543;font-weight:800;font-size:13px">+80</td></tr>
     </table>
 
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">What changed</div>
