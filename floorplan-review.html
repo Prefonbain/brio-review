@@ -1503,16 +1503,41 @@ function renderChanges() {
   el.innerHTML = `
     <div class="change-summary-header">
       V1 → V2 Changes
-      <span class="sqft-badge">2,420 → 2,500 sq ft</span>
+      <span class="sqft-badge">+80 sq ft</span>
     </div>
+
+    <div style="background:#fdeef2;border:1.5px solid #CD1543;border-radius:8px;padding:12px;margin-bottom:12px">
+      <div style="font-size:22px;font-weight:800;color:#CD1543;margin-bottom:2px">2,420 → 2,500 sq ft</div>
+      <div style="font-size:11px;color:#666">All 80 sq ft concentrated in the <strong>primary suite</strong>. No other rooms changed.</div>
+    </div>
+
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">Where the space was added</div>
+
+    <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:14px">
+      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600">Primary Bedroom</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+30–40 sq ft</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600">Primary Bathroom</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+20–25 sq ft</td></tr>
+      <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600">Primary Walk-In Closet</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+15–20 sq ft</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid #3D2C2B;font-weight:700">Total</td><td style="padding:6px 8px;border-bottom:1px solid #3D2C2B;text-align:right;color:#CD1543;font-weight:800">+80 sq ft</td></tr>
+    </table>
+
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">What changed</div>
+
     ${CHANGES.map(c => `
       <div class="change-card">
         <h4><span class="change-badge ${c.badge}">${c.badge}</span> ${esc(c.title)}</h4>
         <p>${esc(c.text)}</p>
       </div>
     `).join('')}
-    <div style="margin-top:12px;padding:10px;background:#fff8e1;border-radius:6px;border-left:3px solid #f0a020;font-size:11px;color:#856404;line-height:1.5">
-      <strong>Tip:</strong> Left-click drag to pan around. Right-click to drop a pin. Switch between V1 and V2 using the toggle at the top. Use the markup tools to draw extension arrows showing where you'd like rooms expanded.
+
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:16px 0 6px">Unchanged rooms</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">
+      ${['Kitchen','Great Room','Dining','Pantry','Mudroom','Laundry','Bedroom #2','Bedroom #3','Full Bath','Garage','Entry / Foyer'].map(r =>
+        `<span style="font-size:10px;padding:3px 8px;background:#e6f5ec;color:#1a7a42;border-radius:10px;font-weight:600">${r}</span>`
+      ).join('')}
+    </div>
+
+    <div style="padding:10px;background:#fff8e1;border-radius:6px;border-left:3px solid #f0a020;font-size:11px;color:#856404;line-height:1.5">
+      <strong>Tip:</strong> Left-click drag to pan. Right-click to drop a pin. Use the markup tools to draw extension arrows where you'd like rooms expanded.
     </div>
   `;
 }
@@ -1761,57 +1786,22 @@ async function migrateOldNotes() {
 }
 
 // ══════════════════════════════════════════
-// Seed V2 change notes onto floor plan
+// Cleanup: remove any Claude-authored seed notes
 // ══════════════════════════════════════════
-async function seedV2ChangeNotes() {
-  const seeded = localStorage.getItem('brio-seeded-v2b');
-  if (seeded) return;
-
+async function cleanupSeedNotes() {
+  const cleaned = localStorage.getItem('brio-cleaned-seeds');
+  if (cleaned) return;
   try {
-    // Check if any notes already exist on v2_sheet6
-    // Check if change notes already exist (look for the Claude-authored ones)
-    const existing = await db.collection('notes').where('versionKey', '==', 'v2_sheet6').get();
-    const hasChangeNotes = existing.docs.some(d => d.data().createdBy === 'Claude');
-    if (hasChangeNotes) {
-      localStorage.setItem('brio-seeded-v2b', 'true');
-      return;
-    }
-
-    const changeNotes = [
-      { x: 0.145, y: 0.48, room: 'Primary Bedroom', category: 'change', priority: 'high',
-        text: 'V2 CHANGE: Rear (south) wall pushed outward — room is noticeably deeper. Estimated +30–40 sq ft. Single largest change in V2.' },
-      { x: 0.11, y: 0.22, room: 'Primary Bath', category: 'change', priority: 'high',
-        text: 'V2 CHANGE: Shower/tub area enlarged (pink-shaded zone is larger than V1). Estimated +20–25 sq ft.' },
-      { x: 0.20, y: 0.30, room: 'Primary Closet (W.I.C.)', category: 'change', priority: 'medium',
-        text: 'V2 CHANGE: Walk-in closet deeper, matching the rear wall extension. Estimated +15–20 sq ft.' },
-      { x: 0.40, y: 0.42, room: 'Kitchen', category: 'confirmed', priority: 'low',
-        text: 'NO CHANGE: Kitchen, island position, and pantry are dimensionally identical between V1 and V2.' },
-      { x: 0.52, y: 0.52, room: 'Great Room', category: 'confirmed', priority: 'low',
-        text: 'NO CHANGE: Great room and dining area footprint unchanged between versions.' },
-      { x: 0.13, y: 0.12, room: 'Bedroom #2', category: 'confirmed', priority: 'low',
-        text: 'NO CHANGE: Bedroom 2 and Bedroom 3 appear dimensionally identical between V1 and V2.' },
-      { x: 0.35, y: 0.68, room: 'General / Whole Floor', category: 'change', priority: 'high',
-        text: 'SUMMARY: All 80 sq ft (2,420 → 2,500) concentrated in the primary suite. No other rooms changed dimensions.' },
-    ];
-
+    const snap = await db.collection('notes').where('versionKey', '==', 'v2_sheet6').get();
     const batch = db.batch();
-    const now = firebase.firestore.Timestamp.now();
-    changeNotes.forEach((n, i) => {
-      const ref = db.collection('notes').doc();
-      batch.set(ref, {
-        ...n,
-        versionKey: 'v2_sheet6',
-        createdBy: 'Claude',
-        createdAt: new firebase.firestore.Timestamp(now.seconds + i, 0),
-      });
+    let count = 0;
+    snap.docs.forEach(doc => {
+      if (doc.data().createdBy === 'Claude') { batch.delete(doc.ref); count++; }
     });
-
-    await batch.commit();
-    localStorage.setItem('brio-seeded-v2b', 'true');
-    console.log('Seeded V2 change notes');
-    // If we're currently viewing v2_sheet6, re-subscribe
-    if (currentVersion === 'v2' && currentSheet === 6) subscribeAll();
-  } catch(err) { console.error('Seed error:', err); }
+    if (count > 0) { await batch.commit(); console.log(`Removed ${count} seed notes`); }
+    localStorage.setItem('brio-cleaned-seeds', 'true');
+    if (count > 0 && currentVersion === 'v2' && currentSheet === 6) subscribeAll();
+  } catch(err) { console.error(err); }
 }
 
 // ══════════════════════════════════════════
@@ -1822,7 +1812,7 @@ loadCurrentImage();
 subscribeAll();
 renderChanges();
 migrateOldNotes();
-seedV2ChangeNotes();
+cleanupSeedNotes();
 </script>
 </body>
 </html>
