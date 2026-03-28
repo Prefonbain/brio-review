@@ -625,6 +625,7 @@ let highlightedId    = null;
 let knownNoteIds     = new Set();
 
 // Drawing state
+let hasLoadedOnce    = false;
 let drawTool         = 'pan';
 let drawColor        = '#CD1543';
 let isDrawing        = false;
@@ -704,7 +705,8 @@ function loadCurrentImage() {
   const filename = VERSIONS[currentVersion].prefix + currentSheet + '.png';
   img.onload = () => {
     document.getElementById('image-container').style.display = 'inline-block';
-    fitToWindow();
+    fitToWindow(!hasLoadedOnce);
+    hasLoadedOnce = true;
     renderPins();
     renderPlanHearts();
     renderDrawings();
@@ -720,11 +722,16 @@ function adjustZoom(delta) {
   applyZoom();
 }
 function resetZoom() { fitToWindow(); }
-function fitToWindow() {
+function fitToWindow(initial) {
   const c = document.getElementById('canvas-area');
   const img = document.getElementById('floor-plan-img');
   if (!img.naturalWidth) return;
-  zoom = Math.min((c.clientWidth - 40) / img.naturalWidth, (c.clientHeight - 40) / img.naturalHeight, 1.0);
+  if (initial && window.innerWidth > 768) {
+    // On desktop, start at 62% which feels right for these plans
+    zoom = 0.62;
+  } else {
+    zoom = Math.min((c.clientWidth - 40) / img.naturalWidth, (c.clientHeight - 40) / img.naturalHeight, 1.0);
+  }
   applyZoom();
 }
 function applyZoom() {
