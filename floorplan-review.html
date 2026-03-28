@@ -728,7 +728,7 @@ function fitToWindow(initial) {
   if (!img.naturalWidth) return;
   if (initial && window.innerWidth > 768) {
     // On desktop, start at 62% which feels right for these plans
-    zoom = 0.62;
+    zoom = 1.22;
   } else {
     zoom = Math.min((c.clientWidth - 40) / img.naturalWidth, (c.clientHeight - 40) / img.naturalHeight, 1.0);
   }
