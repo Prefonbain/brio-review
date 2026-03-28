@@ -1750,6 +1750,58 @@ async function migrateOldNotes() {
 }
 
 // ══════════════════════════════════════════
+// Seed V2 change notes onto floor plan
+// ══════════════════════════════════════════
+async function seedV2ChangeNotes() {
+  const seeded = localStorage.getItem('brio-seeded-v2-changes');
+  if (seeded) return;
+
+  try {
+    // Check if any notes already exist on v2_sheet6
+    const existing = await db.collection('notes').where('versionKey', '==', 'v2_sheet6').limit(1).get();
+    if (!existing.empty) {
+      localStorage.setItem('brio-seeded-v2-changes', 'true');
+      return;
+    }
+
+    const changeNotes = [
+      { x: 0.145, y: 0.48, room: 'Primary Bedroom', category: 'change', priority: 'high',
+        text: 'V2 CHANGE: Rear (south) wall pushed outward — room is noticeably deeper. Estimated +30–40 sq ft. Single largest change in V2.' },
+      { x: 0.11, y: 0.22, room: 'Primary Bath', category: 'change', priority: 'high',
+        text: 'V2 CHANGE: Shower/tub area enlarged (pink-shaded zone is larger than V1). Estimated +20–25 sq ft.' },
+      { x: 0.20, y: 0.30, room: 'Primary Closet (W.I.C.)', category: 'change', priority: 'medium',
+        text: 'V2 CHANGE: Walk-in closet deeper, matching the rear wall extension. Estimated +15–20 sq ft.' },
+      { x: 0.40, y: 0.42, room: 'Kitchen', category: 'confirmed', priority: 'low',
+        text: 'NO CHANGE: Kitchen, island position, and pantry are dimensionally identical between V1 and V2.' },
+      { x: 0.52, y: 0.52, room: 'Great Room', category: 'confirmed', priority: 'low',
+        text: 'NO CHANGE: Great room and dining area footprint unchanged between versions.' },
+      { x: 0.13, y: 0.12, room: 'Bedroom #2', category: 'confirmed', priority: 'low',
+        text: 'NO CHANGE: Bedroom 2 and Bedroom 3 appear dimensionally identical between V1 and V2.' },
+      { x: 0.35, y: 0.68, room: 'General / Whole Floor', category: 'change', priority: 'high',
+        text: 'SUMMARY: All 80 sq ft (2,420 → 2,500) concentrated in the primary suite. No other rooms changed dimensions.' },
+    ];
+
+    const batch = db.batch();
+    const now = firebase.firestore.Timestamp.now();
+    changeNotes.forEach((n, i) => {
+      const ref = db.collection('notes').doc();
+      batch.set(ref, {
+        ...n,
+        versionKey: 'v2_sheet6',
+        createdBy: 'Claude',
+        createdAt: new firebase.firestore.Timestamp(now.seconds + i, 0),
+      });
+    });
+
+    await batch.commit();
+    localStorage.setItem('brio-seeded-v2-changes', 'true');
+    console.log('Seeded V2 change notes');
+    // If we're currently viewing v2_sheet6, re-subscribe
+    if (currentVersion === 'v2' && currentSheet === 6) subscribeAll();
+  } catch(err) { console.error('Seed error:', err); }
+}
+
+// ══════════════════════════════════════════
 // Init
 // ══════════════════════════════════════════
 initUser();
@@ -1757,6 +1809,7 @@ loadCurrentImage();
 subscribeAll();
 renderChanges();
 migrateOldNotes();
+seedV2ChangeNotes();
 </script>
 </body>
 </html>
