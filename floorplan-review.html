@@ -20,11 +20,9 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
 .header-left .subtitle { font-size: 10px; opacity: 0.6; margin-top: 1px; }
 .header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
 
-/* ── Version Toggle ── */
-.version-toggle { display: flex; background: rgba(255,255,255,0.08); border-radius: 6px; padding: 2px; gap: 2px; }
-.version-btn { padding: 6px 16px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; background: transparent; color: rgba(234,229,225,0.5); font-family: inherit; transition: all 0.2s; white-space: nowrap; }
-.version-btn.active { background: #CD1543; color: white; }
-.version-btn:hover:not(.active) { color: #EAE5E1; background: rgba(255,255,255,0.1); }
+/* ── Version Select ── */
+#version-select { background: rgba(255,255,255,0.1); color: #EAE5E1; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; min-width: 200px; }
+#version-select option { background: #3D2C2B; color: #EAE5E1; }
 
 /* ── Buttons ── */
 .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; transition: opacity 0.15s; white-space: nowrap; font-family: inherit; }
@@ -234,8 +232,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
   header { flex-wrap: wrap; padding: 8px 12px; gap: 6px; }
   .header-left h1 { font-size: 13px; }
   .header-left .subtitle { display: none; }
-  .version-toggle { flex: 1; }
-  .version-btn { flex: 1; text-align: center; font-size: 11px; padding: 6px 8px; }
+  #version-select { flex: 1; min-width: 0; font-size: 11px; }
   .user-name-label { display: none; }
   .sheet-tabs-bar { padding: 0 8px; }
   .sheet-tab { padding: 8px 10px; font-size: 10px; }
@@ -273,10 +270,10 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
     <div class="subtitle">Floor Plan Review · Brio Design Homes</div>
   </div>
 
-  <div class="version-toggle">
-    <button class="version-btn active" data-version="v1" onclick="switchVersion('v1')">V1 · Mar 17</button>
-    <button class="version-btn" data-version="v2" onclick="switchVersion('v2')">V2 · Mar 27</button>
-  </div>
+  <select id="version-select" onchange="switchVersion(this.value)">
+    <option value="v2">V2 — March 27, 2026 (2,500 sq ft)</option>
+    <option value="v1">V1 — March 17, 2026 (2,420 sq ft)</option>
+  </select>
 
   <div class="header-right">
     <div class="sync-dot syncing" id="sync-dot" title="Connecting..."></div>
@@ -610,7 +607,7 @@ const CHANGES = [
 // State
 // ══════════════════════════════════════════
 let currentUser      = null;
-let currentVersion   = 'v1';
+let currentVersion   = 'v2';
 let currentSheet     = 6;
 let notes            = [];
 let planHearts       = [];
@@ -690,7 +687,7 @@ function updateUserBadge() {
 // ══════════════════════════════════════════
 function switchVersion(v) {
   currentVersion = v;
-  document.querySelectorAll('.version-btn').forEach(b => b.classList.toggle('active', b.dataset.version === v));
+  document.getElementById('version-select').value = v;
   loadCurrentImage();
   subscribeAll();
 }
