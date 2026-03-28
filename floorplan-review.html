@@ -1698,12 +1698,54 @@ document.addEventListener('keydown', e => {
 });
 
 // ══════════════════════════════════════════
+// Migration: old versionId notes → new versionKey
+// ══════════════════════════════════════════
+async function migrateOldNotes() {
+  const migrated = localStorage.getItem('brio-migrated-v2');
+  if (migrated) return;
+
+  try {
+    // Old notes have versionId field but no versionKey
+    const notesSnap = await db.collection('notes').where('versionId', '!=', null).get();
+    const heartsSnap = await db.collection('planHearts').where('versionId', '!=', null).get();
+    const batch = db.batch();
+    let count = 0;
+
+    notesSnap.forEach(doc => {
+      const data = doc.data();
+      if (!data.versionKey) {
+        // All old notes were on V1 floor plan (sheet 6)
+        batch.update(doc.ref, { versionKey: 'v1_sheet6' });
+        count++;
+      }
+    });
+
+    heartsSnap.forEach(doc => {
+      const data = doc.data();
+      if (!data.versionKey) {
+        batch.update(doc.ref, { versionKey: 'v1_sheet6' });
+        count++;
+      }
+    });
+
+    if (count > 0) {
+      await batch.commit();
+      console.log(`Migrated ${count} old notes/hearts to versionKey format`);
+    }
+    localStorage.setItem('brio-migrated-v2', 'true');
+    // Re-subscribe to pick up migrated notes
+    if (count > 0) subscribeAll();
+  } catch(err) { console.error('Migration error:', err); }
+}
+
+// ══════════════════════════════════════════
 // Init
 // ══════════════════════════════════════════
 initUser();
 loadCurrentImage();
 subscribeAll();
 renderChanges();
+migrateOldNotes();
 </script>
 </body>
 </html>
