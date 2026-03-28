@@ -149,7 +149,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
 #floor-plan-img { display: block; max-width: none; }
 
 /* ── Drawing Toolbar ── */
-.draw-toolbar { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); display: flex; background: white; border-radius: 10px; padding: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); z-index: 20; gap: 2px; align-items: center; }
+.draw-toolbar { position: fixed; top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; background: white; border-radius: 10px; padding: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); z-index: 50; gap: 2px; align-items: center; }
 .draw-tool-btn { width: 34px; height: 34px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; background: transparent; color: #666; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-family: inherit; position: relative; }
 .draw-tool-btn:hover { background: #f0ece8; color: #3D2C2B; }
 .draw-tool-btn.active { background: #3D2C2B; color: white; }
@@ -179,7 +179,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
 .heart-marker:hover .heart-tooltip { display: block; }
 
 /* ── Zoom ── */
-.zoom-controls { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 4px; z-index: 50; }
+.zoom-controls { position: fixed; bottom: 64px; right: 20px; display: flex; flex-direction: column; gap: 4px; z-index: 50; }
 .zoom-btn { width: 32px; height: 32px; background: white; border: 1px solid #d8d0c8; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.15); transition: background 0.15s; }
 .zoom-btn:hover { background: #f0ece8; }
 .zoom-label { text-align: center; font-size: 10px; color: #888; background: white; border: 1px solid #d8d0c8; border-radius: 4px; padding: 2px 4px; }
@@ -250,7 +250,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
   .sidebar-tabs::before { content: ''; display: block; width: 40px; height: 4px; background: #d8d0c8; border-radius: 2px; margin: 0 auto 8px; position: absolute; top: 4px; left: 50%; transform: translateX(-50%); }
   .notes-fab { display: flex; }
   .zoom-controls { bottom: 72px; right: 12px; }
-  .draw-toolbar { top: 8px; padding: 3px; }
+  .draw-toolbar { bottom: 72px; padding: 3px; }
   .draw-tool-btn { width: 30px; height: 30px; font-size: 14px; }
   .modal-overlay { align-items: flex-end; padding: 0; }
   .modal { width: 100%; border-radius: 16px 16px 0 0; max-height: 92vh; padding: 20px 16px 32px; animation: slide-up 0.25s ease; }
