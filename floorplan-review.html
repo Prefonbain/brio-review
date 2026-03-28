@@ -594,13 +594,16 @@ const VERSIONS = {
 };
 
 const CHANGES = [
-  { title: 'Living Area Increased', badge: 'major', text: 'Total living area grew from 2,420 to 2,500 sq ft (+80 sq ft). Additional space distributed across the main living areas.' },
-  { title: 'Front Elevation Refined', badge: 'modified', text: 'Window configurations adjusted on the front facade. Entry porch columns and detailing updated for improved curb appeal.' },
-  { title: 'Rear Elevation Updated', badge: 'modified', text: 'Window arrangement modified on the rear walkout level. Updated proportions to match the enlarged footprint.' },
-  { title: 'Right Side Deck/Balcony', badge: 'modified', text: 'Right side elevation shows an added or refined deck railing at the upper level. Left side garage proportions subtly adjusted.' },
-  { title: 'Floor Plan Layout Adjusted', badge: 'major', text: 'Room proportions adjusted to accommodate the 80 sq ft gain. Visible layout shifts in the bedroom wing and kitchen area — the most substantive change in V2.' },
-  { title: 'Foundation Enlarged', badge: 'modified', text: 'Foundation plan updated to match the enlarged main floor footprint. Lower level design still TBD.' },
-  { title: 'Roof Plan Modified', badge: 'modified', text: 'Roof plan shows a hatched area indicating a changed roof section to accommodate the wider floor plan.' },
+  { title: 'Living Area: 2,420 → 2,500 sq ft', badge: 'major', text: 'All 80 sq ft added to the primary suite. No other rooms changed dimensions significantly.' },
+  { title: 'Primary Bedroom Expanded', badge: 'major', text: 'Rear (south) wall pushed outward, making the room noticeably deeper. Estimated +30–40 sq ft. This is the single largest change in V2.' },
+  { title: 'Primary Bathroom Enlarged', badge: 'major', text: 'Shower/tub area grew — the pink-shaded zone in V2 is distinctly larger than V1. Estimated +20–25 sq ft.' },
+  { title: 'Primary Walk-In Closet Deeper', badge: 'modified', text: 'Walk-in closet extended to match the rear wall push-out. Estimated +15–20 sq ft.' },
+  { title: 'Secondary Bedrooms Unchanged', badge: 'modified', text: 'Bedrooms 2 and 3 appear dimensionally identical between V1 and V2. Hallway may have shifted slightly.' },
+  { title: 'Kitchen / Great Room / Dining Unchanged', badge: 'modified', text: 'The open-concept living area, kitchen island position, pantry, and mudroom are all consistent between versions.' },
+  { title: 'Front Elevation Wider at Bedroom Wing', badge: 'modified', text: 'Front facade reads slightly wider on the left (bedroom wing) side, consistent with the rear wall extension on the primary suite.' },
+  { title: 'Rear Elevation Updated', badge: 'modified', text: 'Primary suite section extends slightly further back. Subtle roofline change visible on the bedroom wing end.' },
+  { title: 'Foundation Enlarged at Bedroom Wing', badge: 'modified', text: 'Foundation footprint under the primary suite extends further in V2. Stairway position unchanged. Lower level design still TBD.' },
+  { title: 'Roof Plan Modified', badge: 'modified', text: 'Hatched/highlighted region in V2 roof plan covers the expanded primary suite footprint — clearest structural evidence of the change.' },
 ];
 
 // ══════════════════════════════════════════
@@ -838,40 +841,44 @@ function subscribeToMarkups() {
 // ══════════════════════════════════════════
 // Canvas Click Handler
 // ══════════════════════════════════════════
-// ── Drag-to-pan on canvas ──
+// ── Left-click drag to pan, right-click to place pins ──
 let panState = null;
 const canvasEl = document.getElementById('canvas-area');
 
+// Left-click drag = pan (always)
 canvasEl.addEventListener('mousedown', e => {
-  // Only pan in pan/heart mode and when clicking the canvas background or image
-  if (!['pan','heart','text'].includes(drawTool)) return;
-  if (e.target.closest('.pin-marker') || e.target.closest('.heart-marker')) return;
-  panState = { startX: e.clientX, startY: e.clientY, scrollX: canvasEl.scrollLeft, scrollY: canvasEl.scrollTop, moved: false };
+  if (e.button !== 0) return; // left button only
+  // Don't pan if using drawing tools on the SVG layer
+  if (['pen','arrow','rect'].includes(drawTool) && e.target.closest('#draw-layer')) return;
+  panState = { startX: e.clientX, startY: e.clientY, scrollX: canvasEl.scrollLeft, scrollY: canvasEl.scrollTop };
   canvasEl.classList.add('panning');
+  e.preventDefault();
 });
 
 window.addEventListener('mousemove', e => {
   if (!panState) return;
   const dx = e.clientX - panState.startX;
   const dy = e.clientY - panState.startY;
-  if (Math.abs(dx) > 4 || Math.abs(dy) > 4) panState.moved = true;
-  if (panState.moved) {
-    canvasEl.scrollLeft = panState.scrollX - dx;
-    canvasEl.scrollTop  = panState.scrollY - dy;
-  }
+  canvasEl.scrollLeft = panState.scrollX - dx;
+  canvasEl.scrollTop  = panState.scrollY - dy;
 });
 
 window.addEventListener('mouseup', e => {
+  if (e.button !== 0) return;
   if (!panState) return;
-  const wasDrag = panState.moved;
   canvasEl.classList.remove('panning');
   panState = null;
-  if (wasDrag) return; // was a drag, don't place anything
 });
 
-function handleCanvasClick(e) {
-  // If we just finished a drag, skip
-  if (panState && panState.moved) return;
+// Right-click = place pin / heart / text (suppress context menu on canvas)
+canvasEl.addEventListener('contextmenu', e => {
+  // Only suppress on the image/container area
+  if (!e.target.closest('#image-container') && e.target.id !== 'canvas-area') return;
+  e.preventDefault();
+  handleCanvasAction(e);
+});
+
+function handleCanvasAction(e) {
   if (!currentUser) { openUserModal(); return; }
   if (e.target.closest('.pin-marker') || e.target.closest('.heart-marker')) return;
 
@@ -882,16 +889,21 @@ function handleCanvasClick(e) {
 
   if (drawTool === 'heart') {
     placePlanHeart(x, y);
-  } else if (drawTool === 'pan') {
-    pendingPin = { x, y };
-    openNoteModal(false);
   } else if (drawTool === 'text') {
     pendingTextPos = { x, y };
     document.getElementById('text-label-text').value = '';
     document.getElementById('text-modal').classList.add('open');
     setTimeout(() => document.getElementById('text-label-text').focus(), 50);
+  } else {
+    // Default: place a pin note
+    pendingPin = { x, y };
+    openNoteModal(false);
   }
-  // pen, arrow, rect are handled by SVG mouse events
+}
+
+// Legacy onclick handler (now only used for pin/heart clicks via event bubbling)
+function handleCanvasClick(e) {
+  // Left clicks now pan — all placement is via right-click
 }
 
 // ══════════════════════════════════════════
@@ -909,10 +921,9 @@ function setDrawTool(tool) {
   svg.classList.toggle('arrow-cursor', tool === 'arrow');
   svg.classList.toggle('rect-cursor', tool === 'rect');
   svg.classList.toggle('text-cursor', tool === 'text');
-  container.style.cursor = tool === 'heart'
-    ? 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\'%3E%3Ctext y=\'20\' font-size=\'20\'%3E♥%3C/text%3E%3C/svg%3E") 12 12, crosshair'
-    : (tool === 'pan' ? 'grab' : 'default');
-  canvasEl.style.cursor = ['pen','arrow','rect'].includes(tool) ? 'default' : (tool === 'pan' ? 'grab' : 'default');
+  // Canvas always shows grab for left-click panning; drawing tools override on the SVG layer
+  canvasEl.style.cursor = 'grab';
+  container.style.cursor = 'grab';
 }
 
 function setDrawColor(color, el) {
@@ -1393,7 +1404,7 @@ function renderSidebar(incomingIds = new Set()) {
   if (filtered.length === 0) {
     list.innerHTML = `<div class="empty-state">${
       notes.length === 0
-        ? 'Click anywhere on the plan<br>to add a note.'
+        ? 'Right-click on the plan to add a note.<br>Left-click drag to pan.'
         : 'No notes match this filter.'
     }</div>`;
     return;
@@ -1490,7 +1501,7 @@ function renderChanges() {
       </div>
     `).join('')}
     <div style="margin-top:12px;padding:10px;background:#fff8e1;border-radius:6px;border-left:3px solid #f0a020;font-size:11px;color:#856404;line-height:1.5">
-      <strong>Tip:</strong> Switch between V1 and V2 using the toggle at the top to compare each sheet side by side. Use the markup tools to draw extension arrows showing where you'd like rooms expanded.
+      <strong>Tip:</strong> Left-click drag to pan around. Right-click to drop a pin. Switch between V1 and V2 using the toggle at the top. Use the markup tools to draw extension arrows showing where you'd like rooms expanded.
     </div>
   `;
 }
