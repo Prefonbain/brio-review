@@ -271,6 +271,7 @@ header { background: #3D2C2B; color: #EAE5E1; padding: 8px 16px; display: flex; 
   </div>
 
   <select id="version-select" onchange="switchVersion(this.value)">
+    <option value="v3">V3 — April 6, 2026 (2,500 sq ft)</option>
     <option value="v2">V2 — March 27, 2026 (2,500 sq ft)</option>
     <option value="v1">V1 — March 17, 2026 (2,420 sq ft)</option>
   </select>
@@ -588,9 +589,10 @@ const SHEETS = {
 const VERSIONS = {
   v1: { label: 'Version 1 — March 17, 2026', sqft: '2,420', prefix: 'v1-sheet-' },
   v2: { label: 'Version 2 — March 27, 2026', sqft: '2,500', prefix: 'v2-sheet-' },
+  v3: { label: 'Version 3 — April 6, 2026', sqft: '2,500', prefix: 'v3-sheet-' },
 };
 
-const CHANGES = [
+const CHANGES_V1_V2 = [
   { title: 'Living Area: 2,420 → 2,500 sq ft', badge: 'major', text: 'Total gain of +80 sq ft distributed across the bedroom wing — secondary bedrooms widened and primary suite reconfigured.' },
   { title: 'Bedrooms 2 & 3 Widened', badge: 'major', text: 'Both bedrooms grew from 11\' × 11\'7" to 13\' × 11\'7" — each gained +23 sq ft (+46 sq ft total). This is the single largest change in V2.' },
   { title: 'Primary Walk-In Closet Reshaped', badge: 'modified', text: 'Closet changed from 11\'5" × 6\'8" (76 sq ft) to 6\'6" × 10\'9" (70 sq ft). Different proportions — narrower but deeper. Net -6 sq ft.' },
@@ -602,11 +604,18 @@ const CHANGES = [
   { title: 'Roof Plan Modified', badge: 'modified', text: 'Hatched/highlighted region in V2 roof plan covers the expanded bedroom wing — clearest structural evidence of the dimensional change.' },
 ];
 
+const CHANGES_V2_V3 = [
+  { title: 'Living Area: 2,500 sq ft (unchanged)', badge: 'modified', text: 'Overall living area appears consistent at 2,500 sq ft. This revision focuses on detail refinements rather than dimensional changes.' },
+  { title: 'Electrical / Fixture Layout Added', badge: 'added', text: 'V3 includes yellow-highlighted elements on the floor plan indicating electrical outlets, switches, and fixture placements — these were not shown in V2.' },
+  { title: 'Elevations Refined', badge: 'modified', text: 'Front and rear elevations show subtle refinements to window trim detailing and proportions. Overall design language unchanged.' },
+  { title: 'Foundation & Roof Plans', badge: 'modified', text: 'Foundation and roof plans appear consistent with V2. Lower level design still TBD.' },
+];
+
 // ══════════════════════════════════════════
 // State
 // ══════════════════════════════════════════
 let currentUser      = null;
-let currentVersion   = 'v2';
+let currentVersion   = 'v3';
 let currentSheet     = 6;
 let notes            = [];
 let planHearts       = [];
@@ -690,6 +699,7 @@ function switchVersion(v) {
   document.getElementById('version-select').value = v;
   loadCurrentImage();
   subscribeAll();
+  renderChanges();
 }
 
 function switchSheet(s) {
@@ -1499,19 +1509,52 @@ function clearAllFilters() {
 // ══════════════════════════════════════════
 function renderChanges() {
   const el = document.getElementById('changes-content');
-  el.innerHTML = `
-    <div class="change-summary-header">
-      V1 → V2 Changes
+
+  function changeCards(changes) {
+    return changes.map(c => `
+      <div class="change-card">
+        <h4><span class="change-badge ${c.badge}">${c.badge}</span> ${esc(c.title)}</h4>
+        <p>${esc(c.text)}</p>
+      </div>
+    `).join('');
+  }
+
+  function unchangedChips(rooms) {
+    return `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:16px 0 6px">Unchanged rooms</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">
+      ${rooms.map(r => `<span style="font-size:10px;padding:3px 8px;background:#e6f5ec;color:#1a7a42;border-radius:10px;font-weight:600">${r}</span>`).join('')}
+    </div>`;
+  }
+
+  const tip = `<div style="padding:10px;background:#fff8e1;border-radius:6px;border-left:3px solid #f0a020;font-size:11px;color:#856404;line-height:1.5;margin-top:12px">
+    <strong>Tip:</strong> Left-click drag to pan. Right-click to drop a pin. Use the markup tools to draw extension arrows where you'd like rooms expanded.
+  </div>`;
+
+  // V2→V3 changes
+  const v2v3Section = `
+    <div class="change-summary-header" style="margin-top:0">
+      V2 → V3 <span style="font-size:11px;color:#888;font-weight:400;margin-left:4px">April 6, 2026</span>
+    </div>
+    <div style="background:#e8f2fc;border:1.5px solid #1a6eb5;border-radius:8px;padding:12px;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:800;color:#1a6eb5;margin-bottom:2px">2,500 sq ft (no change)</div>
+      <div style="font-size:11px;color:#666">Detail refinements — electrical/fixture layout, elevation tweaks. No dimensional changes.</div>
+    </div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">What changed</div>
+    ${changeCards(CHANGES_V2_V3)}
+  `;
+
+  // V1→V2 changes
+  const v1v2Section = `
+    <div class="change-summary-header" style="margin-top:20px;padding-top:16px;border-top:2px solid #e8e2dc">
+      V1 → V2 <span style="font-size:11px;color:#888;font-weight:400;margin-left:4px">March 27, 2026</span>
       <span class="sqft-badge">+80 sq ft</span>
     </div>
-
     <div style="background:#fdeef2;border:1.5px solid #CD1543;border-radius:8px;padding:12px;margin-bottom:12px">
-      <div style="font-size:22px;font-weight:800;color:#CD1543;margin-bottom:2px">2,420 → 2,500 sq ft</div>
+      <div style="font-size:16px;font-weight:800;color:#CD1543;margin-bottom:2px">2,420 → 2,500 sq ft</div>
       <div style="font-size:11px;color:#666">+80 sq ft across the <strong>bedroom wing</strong> — secondary bedrooms widened, primary suite expanded, closet reshaped.</div>
     </div>
 
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">Room-by-room breakdown</div>
-
     <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:14px">
       <tr style="background:#f4f1ee"><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888" colspan="3">ROOM</td><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888;text-align:right">V1</td><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888;text-align:right">V2</td><td style="padding:5px 8px;border-bottom:1px solid #e8e2dc;font-weight:700;font-size:10px;color:#888;text-align:right">+/-</td></tr>
       <tr style="background:#faf8f6"><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;font-weight:600" colspan="3">Bedroom #2</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#888">11'×11'7"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right">13'×11'7"</td><td style="padding:6px 8px;border-bottom:1px solid #e8e2dc;text-align:right;color:#CD1543;font-weight:700">+23</td></tr>
@@ -1523,25 +1566,11 @@ function renderChanges() {
     </table>
 
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:12px 0 6px">What changed</div>
-
-    ${CHANGES.map(c => `
-      <div class="change-card">
-        <h4><span class="change-badge ${c.badge}">${c.badge}</span> ${esc(c.title)}</h4>
-        <p>${esc(c.text)}</p>
-      </div>
-    `).join('')}
-
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#bbb;margin:16px 0 6px">Unchanged rooms</div>
-    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">
-      ${['Kitchen','Great Room','Dining','Pantry','Mudroom','Laundry','Bedroom #2','Bedroom #3','Full Bath','Garage','Entry / Foyer'].map(r =>
-        `<span style="font-size:10px;padding:3px 8px;background:#e6f5ec;color:#1a7a42;border-radius:10px;font-weight:600">${r}</span>`
-      ).join('')}
-    </div>
-
-    <div style="padding:10px;background:#fff8e1;border-radius:6px;border-left:3px solid #f0a020;font-size:11px;color:#856404;line-height:1.5">
-      <strong>Tip:</strong> Left-click drag to pan. Right-click to drop a pin. Use the markup tools to draw extension arrows where you'd like rooms expanded.
-    </div>
+    ${changeCards(CHANGES_V1_V2)}
+    ${unchangedChips(['Kitchen','Great Room','Dining','Pantry','Mudroom','Laundry','Full Bath','Garage','Entry / Foyer'])}
   `;
+
+  el.innerHTML = v2v3Section + v1v2Section + tip;
 }
 
 // ══════════════════════════════════════════
